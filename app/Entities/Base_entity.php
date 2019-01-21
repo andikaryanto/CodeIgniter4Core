@@ -29,7 +29,7 @@ class Base_entity extends Entity
 
         if (substr($name, 0, 4) == 'get_' && substr($name, 4, 5) != 'list_')
 		{
-			$entity = 'App\\Entities\\'.substr($name, 4).'_entity';
+			$entity = 'App\\Entities\\'.entity(substr($name, 9));
 			$field = substr($name, 4).'_Id';
 			$model = model(substr($name, 4));
 
@@ -37,7 +37,7 @@ class Base_entity extends Entity
 			if(isset($this->$field)){
                 $object = new $modelobject;
                 $list = $object->where('Id', $this->$field)->findAll();
-                $fields = $this->db->getFieldData(table(plural(substr($name, 4))));
+                $fields = $this->db->getFieldData(table(substr($name, 4)));
                 foreach ($list as $arrdata){
                     $entityobject = new $entity;
                     foreach($fields as $field){
@@ -51,26 +51,32 @@ class Base_entity extends Entity
 			}
 			
 		} else if (substr($name, 0, 4) == 'get_' && substr($name, 4, 5) == 'list_') {
-            $entity = substr($name, 9);
-			$model = model($entity);
-			$field = column(entity($this->model())).'_Id';
-			$CI->load->model($model);
-			//echo $model;
+            
+            $entity = 'App\\Entities\\'.entity(substr($name, 9));
+			$model = model(substr($name, 9));
+            $field = $this->table.'_Id';
+            //echo $model;
+            
+            $modelobject = 'App\\Models\\'.$model;
 			if(isset($this->Id)){
-				$params = array(
-					'where' => array(
-						$field => $this->Id
-					)
-				);
-				
-				$result = $CI->$model->get_list(null, null, $params);
-				if($result)
-					return $result;
-			// 	else
-			// 		return array();
-				
-			// } else {
-				// return array();
+                
+                $object = new $modelobject;
+				$list_data = [];
+				$list = $object->where($field, $this->Id)->findAll();
+				if($list){
+                    $fields = $this->db->getFieldData(table(substr($name, 9)));
+                    foreach ($list as $arrdata){
+                        $entityobject = new $entity;
+                        foreach ($fields as $field)
+                        {
+                            $name = $field->name;
+                            $entityobject->$name = $arrdata[$name];
+                        }
+                        array_push($list_data, $entityobject);
+                    }
+                    return $list_data;
+                }
+					
 			}
 			return array();
 		} else {
@@ -175,7 +181,7 @@ if (!function_exists('entity'))
 	function entity($table)
 	{
 		helper('inflector');
-		return singular($table);
+		return singular($table).'_entity';
 	}
 }
 

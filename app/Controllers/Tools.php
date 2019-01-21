@@ -2,10 +2,11 @@
 
 use CodeIgniter\Controller;
 use CodeIgniter\I18n\Time;
+use App\Controllers\Base_controller;
 
-class Tools extends Controller {
-    // private $db;
-    // private $forge;
+class Tools extends Base_Controller {
+    private $db;
+    private $forge;
     public function __construct() {
         
         $this->db = \Config\Database::connect();

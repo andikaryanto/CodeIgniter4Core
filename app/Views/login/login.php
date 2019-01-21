@@ -63,7 +63,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
-            <form class="form" method = "post" action = "<?= base_url('public/login/dologin');?>">
+            <form class="form" method = "post" action = "login/dologin">
               <div class="card card-login">
                 <div class="card-header card-header-rose text-center">
                   <h4 class="card-title">Login</h4>

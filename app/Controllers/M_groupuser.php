@@ -2,8 +2,9 @@
 use CodeIgniter\Controller;
 use CodeIgniter\Entity;
 use App\Entities\M_groupuser_entity;
+use App\Controllers\Base_controller;
 
-class M_groupuser extends Controller{
+class M_groupuser extends Base_controller{
 
     // public function __construct() {
     //     parent::__construct();

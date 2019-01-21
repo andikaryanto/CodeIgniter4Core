@@ -1,6 +1,6 @@
 <?php namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
-class Migration_create_m_groupuser20190121090857 extends Migration {
+class Migration_create_m_group_user_table extends Migration {
 
     public function up() {
         $forge = \Config\Database::forge();
@@ -43,10 +43,11 @@ class Migration_create_m_groupuser20190121090857 extends Migration {
         ]);
         $forge->addKey('Id', TRUE);
         $forge->createTable('m_groupusers', TRUE);
+        
     }
 
     public function down() {
-        //$forge->dropTable('create_m_groupuser_table20181230132232');
+        // $this->dbforge->drop_table('m_groupuser');
     }
 
 }

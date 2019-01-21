@@ -1,8 +1,9 @@
 <?php namespace App\Controllers;
 use CodeIgniter\Controller;
 use App\Entities\M_user_entity;
+use App\Controllers\Base_controller;
 
-class Login extends Controller
+class Login extends Base_controller
 {
     // public function __construct()
     // {
@@ -22,36 +23,38 @@ class Login extends Controller
     }
     public function dologin()
     {
-        $username = $this->input->post('loginUsername');
-        $password = $this->input->post('loginPassword');
+        // echo json_encode($_POST['loginUsername']);
+        $username = $_POST['loginUsername'];
+        $password = $_POST['loginPassword'];
         
         $user = new M_user_entity();
         $params = array(
             'where' => array(
                 'Username' => $username,
-                'Password' => $password
+                'Password' => encryptMD5('school'.$username.$password)
             )   
         );
-        $query = $user->findAll($params);
+        $query = $user->findAll($params)[0];
         
-        if ($query)
-        {
-            if($query->IsActive == 1){
-                //print_r($query->get_list_M_User()); 
-                $this->session->set_userdata('userdata',get_object_vars($query));
-                $this->session->set_userdata('usersettings',get_object_vars($query->get_list_M_Usersetting()[0]));
-                $this->session->set_userdata('userprofile',get_object_vars($query->get_list_M_Userprofile()[0]));
-                $this->session->set_userdata('languages',get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Language()));
-                $this->session->set_userdata('colors',get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Color()));
-                // echo json_encode($this->session->userdata('colors'));
-                redirect('home');
-            } else {
-                redirect('login');
-            }
-        }
-        else{
-            redirect('login');
-        }
+        echo json_encode($query->get_list_M_Userprofile()[0]);
+        // if ($query)
+        // {
+        //     if($query->IsActive == 1){
+        //         //print_r($query->get_list_M_User()); 
+        //         $this->session->set_userdata('userdata',get_object_vars($query));
+        //         $this->session->set_userdata('usersettings',get_object_vars($query->get_list_M_Usersetting()[0]));
+        //         $this->session->set_userdata('userprofile',get_object_vars($query->get_list_M_Userprofile()[0]));
+        //         $this->session->set_userdata('languages',get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Language()));
+        //         $this->session->set_userdata('colors',get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Color()));
+        //         // echo json_encode($this->session->userdata('colors'));
+        //         redirect('home');
+        //     } else {
+        //         redirect('login');
+        //     }
+        // }
+        // else{
+        //     redirect('login');
+        // }
     }
 
     public function dologout()
