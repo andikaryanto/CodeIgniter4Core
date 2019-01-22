@@ -3,19 +3,21 @@ use CodeIgniter\Controller;
 use App\Entities\M_user_entity;
 use App\Controllers\Base_controller;
 
-class Login extends Base_controller
+class Login extends Controller
 {
-    // public function __construct()
-    // {
-    //     parent::__construct();
-    //     //$this->load->model('M_users');
-
-    // }
+    protected $helpers = ['helpers', 'form', 'paging', 'config'];
+    protected $session;
+    public function __construct()
+    {
+        $this->session = \Config\Services::session();
+    }
 
     public function index()
     {
-        if(isset($_SESSION['userdata'])){
-            redirect('home');
+        // echo json_encode($_SESSION['userdata']);
+        if(!empty($this->session->get('userdata'))){
+            return redirect()->route('home');
+            //echo json_encode($this->session->get('userdata'));
         }
         else{
             echo view('login/login');
@@ -24,54 +26,43 @@ class Login extends Base_controller
     public function dologin()
     {
         // echo json_encode($_POST['loginUsername']);
-        $username = $_POST['loginUsername'];
-        $password = $_POST['loginPassword'];
+        $username = $this->request->getPost('loginUsername');
+        $password = $this->request->getPost('loginPassword');
         
         $user = new M_user_entity();
         $params = array(
             'where' => array(
                 'Username' => $username,
-                'Password' => encryptMD5('school'.$username.$password)
+                'Password' => encryptMD5(getStringPrefix_config().$username.$password)
             )   
         );
-        $query = $user->findAll($params)[0];
-        
-        echo json_encode($query->get_list_M_Userprofile()[0]);
-        // if ($query)
-        // {
-        //     if($query->IsActive == 1){
-        //         //print_r($query->get_list_M_User()); 
-        //         $this->session->set_userdata('userdata',get_object_vars($query));
-        //         $this->session->set_userdata('usersettings',get_object_vars($query->get_list_M_Usersetting()[0]));
-        //         $this->session->set_userdata('userprofile',get_object_vars($query->get_list_M_Userprofile()[0]));
-        //         $this->session->set_userdata('languages',get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Language()));
-        //         $this->session->set_userdata('colors',get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Color()));
-        //         // echo json_encode($this->session->userdata('colors'));
-        //         redirect('home');
-        //     } else {
-        //         redirect('login');
-        //     }
-        // }
-        // else{
-        //     redirect('login');
-        // }
+        $query = $user->first($params);
+        //echo json_encode($query);
+        if ($query)
+        {
+            // echo json_encode($query->get_list_M_Usersetting()[0]->get_G_Color());
+            //$query = $result[0];
+            if($query->IsActive == 1){
+                $this->session->set(getSessionVariable_config()['userdata'],get_object_vars($query));
+                $this->session->set(getSessionVariable_config()['usersettings'],get_object_vars($query->get_list_M_Usersetting()[0]));
+                $this->session->set(getSessionVariable_config()['userprofile'],get_object_vars($query->get_list_M_Userprofile()[0]));
+                $this->session->set(getSessionVariable_config()['languages'],get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Language()));
+                $this->session->set(getSessionVariable_config()['colors'],get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Color()));
+                return redirect('home');
+            } else {
+                return redirect('login');
+            }
+        }
+        else{
+            return redirect('login');
+        }
     }
 
     public function dologout()
     {
         //$username = $_SESSION['userdata']['Username'];
-        unset(
-            $_SESSION['userdata']
-        );
-        //$this->M_users->set_logout($username);
-        redirect('login');
-    }
-
-    private function loadview($viewName)
-	{
-		$this->load->view('template/header');
-		$this->load->view($viewName);
-		$this->load->view('template/footer');
+        $this->session->destroy();
+        return redirect('login');
     }
     
 }

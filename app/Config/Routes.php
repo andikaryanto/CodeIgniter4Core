@@ -73,7 +73,19 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Login::index');
+$routes->add('login', 'Login::index');
 $routes->add('login/dologin', 'Login::dologin');
+$routes->get('home', 'Home::index');
+
+$routes->get('mgroupuser', 'M_groupuser::index');
+$routes->get('mgroupuser/add', 'M_groupuser::add');
+$routes->add('mgroupuser/addsave', 'M_groupuser::addsave');
+$routes->get('mgroupuser/edit/(:any)', 'M_groupuser::edit/$1');
+$routes->add('mgroupuser/editsave', 'M_groupuser::editsave');
+$routes->add('mgroupuser/delete', 'M_groupuser::delete');
+
+$routes->get('mcompany', 'M_company::index');
+$routes->add('mcompany/addsave', 'M_company::addsave');
 
 /**
  * --------------------------------------------------------------------

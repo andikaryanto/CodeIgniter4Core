@@ -15,14 +15,14 @@
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"/> -->
   <link rel="stylesheet" href="<?= base_url('assets/material-dashboard/assets/css/googlefonts.css')?>"/>
   <!-- CSS Files -->
-  <link href="<?= base_url($_SESSION['colors']['CssPath']);?>" rel="stylesheet" />
+  <link href="<?= base_url($_SESSION[getSessionVariable_config()['colors']]['CssPath']);?>" rel="stylesheet" />
   <link href="<?= base_url('assets/material-dashboard/assets/css/dropzone.css');?>" rel="stylesheet" />
   <link href="<?= base_url('assets/material-dashboard/assets/css/customglobal.css');?>" rel="stylesheet" />
   <!-- <link href="<?= base_url('assets/material-dashboard/assets/css/test.css');?>" rel="stylesheet" /> -->
   <link href="<?= base_url('assets/material-dashboard/assets/css/jasny-bootstrap.css');?>" rel="stylesheet" />
   <!-- <link href="<?= base_url('assets/material-dashboard/assets/css/jquery.dataTables.min.css');?>" rel="stylesheet" /> -->
   <link href="<?= base_url('assets/material-dashboard/assets/css/animate.css');?>" rel="stylesheet" />
-  <link href="<?= base_url($_SESSION['colors']['CssCustomPath']);?>" rel="stylesheet" />
+  <link href="<?= base_url($_SESSION[getSessionVariable_config()['colors']]['CssCustomPath']);?>" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="<?= base_url('assets/material-dashboard/assets/demo/demo.css');?>" rel="stylesheet" />
   <script src="<?= base_url('assets/material-dashboard/assets/js/core/jquery.min.js');?>"></script>
@@ -60,12 +60,12 @@
       <div class="sidebar-wrapper ps-container ps-theme-default ps-active-y" data-ps-id="af8bc3a6-63f8-c37d-ec22-0c6794f3a10c">
         <div class="user">
           <div class="photo">
-            <img src="<?= base_url($_SESSION['userprofile']['PhotoPath'].$_SESSION['userprofile']['PhotoName']);?>">
+            <img src="<?= base_url($_SESSION[getSessionVariable_config()['userprofile']]['PhotoPath'].$_SESSION[getSessionVariable_config()['userprofile']]['PhotoName']);?>">
           </div>
           <div class="user-info">
             <a data-toggle="collapse" href="#collapseExample" class="username">
               <span>
-                <?= $_SESSION['userdata']['Username']?>
+                <?= $_SESSION[getSessionVariable_config()['userdata']]['Username']?>
                 <b class="caret"></b>
               </span>
             </a>
@@ -78,9 +78,9 @@
                   </a>
                 </li> -->
                 <li class="nav-item">
-                  <a class="nav-link" href="<?= base_url('profile')?>">
+                  <a class="nav-link" href="profile">
                     <span class="sidebar-mini"> P </span>
-                    <span class="sidebar-normal"> <?= lang('ui_profile')?> </span>
+                    <span class="sidebar-normal"> <?= lang('Form.profile')?> </span>
                   </a>
                 </li>
                 <!-- <li class="nav-item">
@@ -104,7 +104,7 @@
           <li class="nav-item ">
             <a class="nav-link collapsed" data-toggle="collapse" href="#setupPage" aria-expanded="false">
               <i class="material-icons">description</i>
-              <p><?= lang('ui_setting')?>
+              <p><?= lang('Form.setting')?>
                 <b class="caret"></b>
               </p>
             </a>
@@ -113,7 +113,7 @@
               
               <?php 
               foreach($setupmenu as $master) {
-                if(is_permitted($_SESSION['userdata']['M_Groupuser_Id'],$master->FormName, "Read")){
+                if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],$master->FormName, "Read")){
               ?>
                 <li class="nav-item ">
                   <a class="nav-link" href="<?= base_url($master->IndexRoute);?>">
@@ -131,7 +131,7 @@
           <li class="nav-item ">
             <a class="nav-link collapsed" data-toggle="collapse" href="#generalMenu" aria-expanded="false">
               <i class="material-icons">description</i>
-              <p> <?= lang('ui_general')?>
+              <p> <?= lang('Form.general')?>
                 <b class="caret"></b>
               </p>
             </a>
@@ -140,7 +140,7 @@
               
               <?php 
               foreach($generalmenu as $master) {
-                if(is_permitted($_SESSION['userdata']['M_Groupuser_Id'],$master->FormName, "Read")){
+                if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],$master->FormName, "Read")){
               ?>
                 <li class="nav-item ">
                   <a class="nav-link" href="<?= base_url($master->IndexRoute);?>">
@@ -168,7 +168,7 @@
               
               <?php 
               foreach($mastermenu as $master) {
-                if(is_permitted($_SESSION['userdata']['M_Groupuser_Id'],$master->FormName, "Read")){
+                if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],$master->FormName, "Read")){
               ?>
                 <li class="nav-item ">
                   <a class="nav-link" href="<?= base_url($master->IndexRoute);?>">
@@ -186,7 +186,7 @@
           <li class="nav-item ">
             <a class="nav-link collapsed" data-toggle="collapse" href="#transactionMenu" aria-expanded="false">
               <i class="material-icons">description</i>
-              <p> <?= lang('ui_transaction')?>
+              <p> <?= lang('Form.transaction')?>
                 <b class="caret"></b>
               </p>
             </a>
@@ -195,7 +195,7 @@
               
               <?php 
               foreach($transactionmenu as $master) {
-                if(is_permitted($_SESSION['userdata']['M_Groupuser_Id'],$master->FormName, "Read")){
+                if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],$master->FormName, "Read")){
               ?>
                 <li class="nav-item ">
                   <a class="nav-link" href="<?= base_url($master->IndexRoute);?>">
@@ -213,30 +213,30 @@
           <li class="nav-item ">
             <a class="nav-link" href="<?= base_url("report");?>">
               <i class="material-icons">description</i>
-              <p> <?= lang('ui_report')?> </p>
+              <p> <?= lang('Form.report')?> </p>
             </a>
           </li>
           <?php 
-            if(is_permitted($_SESSION['userdata']['M_Groupuser_Id'],"m_users", "Read"))  
+            if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],"m_users", "Read"))  
             {
           ?>
           <li class="nav-item ">
             <a class="nav-link" href="<?= base_url("muser");?>">
               <i class="material-icons">face</i>
-              <p> <?= lang('ui_user')?> </p>
+              <p> <?= lang('Form.user')?> </p>
             </a>
           </li>
           <?php 
             }
           ?>
           <?php 
-            if(is_permitted($_SESSION['userdata']['M_Groupuser_Id'],"m_groupusers", "Read"))  
+            if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],"m_groupusers", "Read"))  
             {
           ?>
           <li class="nav-item ">
             <a class="nav-link" href="<?= base_url("mgroupuser");?>">
               <i class="material-icons">face</i>
-              <p> <?= lang('ui_groupuser')?> </p>
+              <p> <?= lang('Form.groupuser')?> </p>
             </a>
           </li>
           <?php 
@@ -311,10 +311,10 @@
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                  <a class="dropdown-item" href="<?= base_url('changePassword')?>"><?= lang('ui_changepassword')?></a>
-                  <a class="dropdown-item" href="<?= base_url('settings')?>"><?= lang('ui_setting')?></a>
+                  <a class="dropdown-item" href="changePassword"><?= lang('Form.changepassword')?></a>
+                  <a class="dropdown-item" href="settings"><?= lang('Form.setting')?></a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="<?= base_url('login/dologout')?>"><?= lang('ui_logout')?></a>
+                  <a class="dropdown-item" href="<?= base_url('login/dologout');?>"><?= lang('Form.logout')?></a>
                 </div>
               </li>
             </ul>

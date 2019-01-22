@@ -255,19 +255,19 @@
     function setNotification(message, title, position, align){
 
       if(title == 1){
-        var titlestr = "<?= lang('ui_warning') ?>";
+        var titlestr = "<?= lang('Form.warning') ?>";
         var type = "warning";
       }
       else if(title == 2){
-        var titlestr = "<?= lang('ui_success') ?>";
+        var titlestr = "<?= lang('Form.success') ?>";
         var type = "success";
       }
       else if(title == 3){
-        var titlestr = "<?= lang('ui_danger') ?>";
+        var titlestr = "<?= lang('Form.danger') ?>";
         var type = "danger";
       }
       else{
-        var titlestr = "<?= lang('ui_info') ?>";
+        var titlestr = "<?= lang('Form.info') ?>";
         var type = "info";
       }
 
@@ -322,15 +322,15 @@
       function deleteData(name, callback){
       bootbox.confirm({
       //title: "Destroy planet?",
-      message: "<div class='text-center'><?= lang('ui_want_delete')?> <b><text class = 'text-primary'>" + name + "</text></b> ?</div>",
+      message: "<div class='text-center'><?= lang('Form.want_delete')?> <b><text class = 'text-primary'>" + name + "</text></b> ?</div>",
         buttons: {
             cancel: {
                 className: 'btn btn-link',
-                label: "<?= lang('ui_cancel')?>"
+                label: "<?= lang('Form.cancel')?>"
             },
             confirm: {
                 className: 'btn btn-primary btn-link',
-                label: "<?= lang('ui_confirm')?>"
+                label: "<?= lang('Form.confirm')?>"
             }
         },
         callback: function (result) {
@@ -405,7 +405,7 @@
       parallelUploads: maxfiles,
       acceptedFiles: acceptedfiles,
       addRemoveLinks: true,
-      dictDefaultMessage: "<?= lang('ui_uploadhere')?>",
+      dictDefaultMessage: "<?= lang('Form.uploadhere')?>",
       autoProcessQueue: autoprocessqueue,
       init:function(){
         myDropzone = this;
@@ -439,6 +439,59 @@
       }, 600);
     });
   
+  </script>
+  <script>
+    function init(){
+      <?php 
+      $session = \Config\Services::session();
+
+      if($session->getFlashdata('success_msg'))
+      {
+        $msg = $session->getFlashdata('success_msg');
+        for($i=0 ; $i<count($msg); $i++)
+        {
+      ?>
+          setNotification("<?= lang($msg[$i]); ?>", 2, "bottom", "right");
+      <?php 
+        }
+      }
+    ?>
+    // var ses = <?= json_encode($session->getFlashdata('edit_warning_msg'))?>;
+    // console.log(ses);
+    <?php 
+      if($session->getFlashdata('edit_warning_msg'))
+      {
+        $msg = $session->getFlashdata('edit_warning_msg');
+        for($i=0 ; $i<count($msg); $i++)
+        {
+      ?>
+          setNotification("<?= lang($msg[$i]); ?>", 3, "bottom", "right");
+      <?php 
+        }
+      }
+    ?>
+
+    <?php 
+    if($session->getFlashdata('add_warning_msg'))
+    {
+      $msg = $session->getFlashdata('add_warning_msg');
+      for($i=0 ; $i<count($msg); $i++)
+      {
+    ?>
+        setNotification("<?= lang($msg[$i]); ?>", 3, "bottom", "right");
+    <?php 
+
+        
+      }
+    }
+
+    unset(
+          $_SESSION['success_msg'],
+          $_SESSION['edit_warning_msg'],
+          $_SESSION['add_warning_msg']
+    );
+    ?>
+  }
   </script>
 </body>
 

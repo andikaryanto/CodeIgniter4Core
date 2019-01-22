@@ -82,98 +82,98 @@ class Migration_create_m_enum_table20181201061354 extends Base_migration {
                 'Value' => 1,
                 'EnumName' => 'January',
                 'Ordering' => 1,
-                'Resource' => 'ui_january'
+                'Resource' => 'Form.january'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 2,
                 'EnumName' => 'February',
                 'Ordering' => 2,
-                'Resource' => 'ui_february'
+                'Resource' => 'Form.february'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 3,
                 'EnumName' => 'March',
                 'Ordering' => 3,
-                'Resource' => 'ui_march'
+                'Resource' => 'Form.march'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 4,
                 'EnumName' => 'April',
                 'Ordering' => 4,
-                'Resource' => 'ui_april'
+                'Resource' => 'Form.april'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 5,
                 'EnumName' => 'May',
                 'Ordering' => 5,
-                'Resource' => 'ui_may'
+                'Resource' => 'Form.may'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 6,
                 'EnumName' => 'June',
                 'Ordering' => 6,
-                'Resource' => 'ui_june'
+                'Resource' => 'Form.june'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 7,
                 'EnumName' => 'July',
                 'Ordering' => 7,
-                'Resource' => 'ui_july'
+                'Resource' => 'Form.july'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 8,
                 'EnumName' => 'August',
                 'Ordering' => 8,
-                'Resource' => 'ui_august'
+                'Resource' => 'Form.august'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 9,
                 'EnumName' => 'September',
                 'Ordering' => 9,
-                'Resource' => 'ui_september'
+                'Resource' => 'Form.september'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 10,
                 'EnumName' => 'October',
                 'Ordering' => 10,
-                'Resource' => 'ui_october'
+                'Resource' => 'Form.october'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 11,
                 'EnumName' => 'November',
                 'Ordering' => 11,
-                'Resource' => 'ui_november'
+                'Resource' => 'Form.november'
             ),
             array(
                 'M_Enum_Id' => 1,
                 'Value' => 12,
                 'EnumName' => 'December',
                 'Ordering' => 12,
-                'Resource' => 'ui_december'
+                'Resource' => 'Form.december'
             ),
             array(
                 'M_Enum_Id' => 2,
                 'Value' => 1,
                 'EnumName' => 'Male',
                 'Ordering' => 1,
-                'Resource' => 'ui_male'
+                'Resource' => 'Form.male'
             ),
             array(
                 'M_Enum_Id' => 2,
                 'Value' => 2,
                 'EnumName' => 'Female',
                 'Ordering' => 2,
-                'Resource' => 'ui_female'
+                'Resource' => 'Form.female'
             ),
             array(
                 'M_Enum_Id' => 3,

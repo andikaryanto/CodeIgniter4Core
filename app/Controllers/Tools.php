@@ -26,6 +26,10 @@ class Tools extends Base_Controller {
         echo "Hello {$to}!" . PHP_EOL;
     }
 
+    public function encryptMD5_test($string = ''){
+        echo encryptMD5($string);
+    }
+
     public function help() {
         $result = "The following are the available command line interface commands\n\n";
         $result .= "php index.php tools migration \"file_name\"         Create new migration file\n";

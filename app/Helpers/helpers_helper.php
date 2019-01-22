@@ -1,5 +1,4 @@
 <?php
-// defined('BASEPATH') OR exit('No direct script access allowed');
 
 function encryptMd5($string){
     $hash = md5($string);
@@ -44,14 +43,6 @@ function replaceSession($name, $data){
     $CI->session->set_userdata($name, $data);
 }
 
-function load_view($viewName, $data = null)
-{
-    $CI =& get_instance();
-    $CI->paging->load_header();
-    $CI->load->view($viewName, $data);
-    $CI->paging->load_footer();
-}
-
 function delete_status($msg = NULL, $status = TRUE, $isforbidden = FALSE){
     $delete['msg'] = $msg;
     $delete['status'] = $status;
@@ -87,7 +78,7 @@ function get_date($strdate, $add = '30 days', $format = "Y-m-d H:i:s"){
     return date_format($date, $format);
 }
 
-function get_formated_date($strdate = null, $format = null){
+function getFormatedDate($strdate = null, $format = null){
     $date;
     if(!empty($strdate))
         $date = new DateTime($strdate);
@@ -100,10 +91,10 @@ function get_formated_date($strdate = null, $format = null){
     return $date->format('Y-m-d H:i:s');
 }
 
-function is_permitted($groupid = null, $form = null, $role = null){
-    $CI =& get_instance();
-   // $CI->load->model(array('M_groupusers'));
-    $ispermitted = $CI->M_groupusers->is_permitted($groupid, $form, $role);
+function isPermitted($groupid = null, $form = null, $role = null){
+    $groupentity = "App\Entities\M_groupuser_entity";
+    $mgroupuser = new $groupentity;
+    $ispermitted = $mgroupuser->isPermitted($groupid, $form, $role);
     return $ispermitted;
 }
 
@@ -143,6 +134,21 @@ function set_dropzone_response($message){
     return array(
         'message' => $message
     );
+}
+
+function queryErrorCode(){
+    $code['datainrefenrence'] = 1451;
+    return $code;
+}
+
+function getQueryErrorMessage($code){
+    $msg = array();
+
+    if($code == queryErrorCode()['datainrefenrence']){
+        $msg = array_push($msg, lang('Form.datainreference'));
+    }
+
+    return $msg;
 }
 
 

@@ -7,7 +7,7 @@ class Migration_insert_defaul_table_user extends Migration {
         $db = \Config\Database::connect();
         $data = [
             'Username' => 'superadmin',
-            'Password' => '0d403ffb03c72dff96ee1d0de8c75ee8'
+            'Password' => '4586c6dc7de2fcdcf3a03f334cd2f7cb'
         ];
         
         $builder = $db->table('m_users');

@@ -3,15 +3,16 @@ use CodeIgniter\Entity;
 
 class Base_entity extends Entity
 {
+    protected $session;
     protected $db;
     protected $table='';
     protected $model='';
     protected $modelobject = '';
     protected $newmodel;
-    public $field;
     public function __construct(){
         parent::__construct();
         $this->db = \Config\Database::connect();
+        $this->session = \Config\Services::session();
 
         if (!$this->table)
             $this->table = explode("\\", str_replace('_entity', '', strtolower(get_class($this))))[2];
@@ -29,54 +30,29 @@ class Base_entity extends Entity
 
         if (substr($name, 0, 4) == 'get_' && substr($name, 4, 5) != 'list_')
 		{
-			$entity = 'App\\Entities\\'.entity(substr($name, 9));
-			$field = substr($name, 4).'_Id';
-			$model = model(substr($name, 4));
-
-            $modelobject = 'App\\Models\\'.$model;
+			$entity = 'App\\Entities\\'.entity(substr($name, 4));
 			if(isset($this->$field)){
-                $object = new $modelobject;
-                $list = $object->where('Id', $this->$field)->findAll();
-                $fields = $this->db->getFieldData(table(substr($name, 4)));
-                foreach ($list as $arrdata){
-                    $entityobject = new $entity;
-                    foreach($fields as $field){
-                        $name = $field->name;
-                        $entityobject->$name = $arrdata[$name];
-                    }
-                }
-                return $entityobject;
+                $entityobject = new $entity;
+                $result = $entityobject->find($this->$field);
+                return $result;
 			} else {
-				return new $entity;
+				return null;
 			}
 			
 		} else if (substr($name, 0, 4) == 'get_' && substr($name, 4, 5) == 'list_') {
             
             $entity = 'App\\Entities\\'.entity(substr($name, 9));
-			$model = model(substr($name, 9));
             $field = $this->table.'_Id';
-            //echo $model;
-            
-            $modelobject = 'App\\Models\\'.$model;
+
 			if(isset($this->Id)){
-                
-                $object = new $modelobject;
-				$list_data = [];
-				$list = $object->where($field, $this->Id)->findAll();
-				if($list){
-                    $fields = $this->db->getFieldData(table(substr($name, 9)));
-                    foreach ($list as $arrdata){
-                        $entityobject = new $entity;
-                        foreach ($fields as $field)
-                        {
-                            $name = $field->name;
-                            $entityobject->$name = $arrdata[$name];
-                        }
-                        array_push($list_data, $entityobject);
-                    }
-                    return $list_data;
-                }
-					
+                $entityobject = new $entity;
+                $params = array(
+                    'where' => array(
+                        $field => $this->Id
+                    )
+                );
+                $result = $entityobject->findAll($params);
+				return $result;
 			}
 			return array();
 		} else {
@@ -86,26 +62,49 @@ class Base_entity extends Entity
     }
     
     public function save(){
-        if($this->Id)
+        $new_id = 0;
+        if($this->Id){
+            $this->ModifiedBy = $_SESSION[getSessionVariable_config()['userdata']]['Username'];
+            $this->Modified = getFormatedDate();
             $this->newmodel->update($this->Id, $this);
-        else {      
+            $new_id = $this->Id;
+        } else {      
+            $this->CreatedBy = $_SESSION[getSessionVariable_config()['userdata']]['Username'];
+            $this->Created = getFormatedDate();
             $this->newmodel->insert($this);
+            $new_id = $this->newmodel->insertID();
         }
+        return $new_id;
     }
 
     public function delete(){
-        $this->newmodel->delete($this->Id);
+        if(!$this->newmodel->delete($this->Id));
+            return $this->newmodel->error();
+        return $this->newmodel->affectedRows();
     }
 
     public function findAll($params = null){
         $list_data = [];
-        $where = (isset($params['where']) ? $params['where'] : FALSE);	
+
+        $where = (isset($params['where']) ? $params['where'] : FALSE);
+        $where_not_in = (isset($params['where_not_in']) ? $params['where_not_in'] : FALSE);
+
         $data = $this->newmodel;
         if ($where){
 			foreach($where as $key => $value){
-                $data = $this->newmodel->where($key, $value);
+                $data = $data->where($key, $value);
 			}
-		}
+        }
+
+        if($where_not_in){
+            $index = 0;
+            foreach($where_not_in as $key => $value){
+               foreach($value as $valuedata){
+                    $data = $data->where($key, $valuedata);
+               }
+			}
+        }
+
         $list =  $data->findAll();
 
         $fields = $this->db->getFieldData(table($this->table));
@@ -123,9 +122,6 @@ class Base_entity extends Entity
     }
 
     public function find($id){
-        // $this->newmodel->returnType = get_class($this);
-        // echo get_class($this);
-        //echo json_encode($this);
         $data = $this->newmodel->find($id);
         $fields = $this->db->getFieldData(table($this->table));
         foreach ($fields as $field)
@@ -134,12 +130,27 @@ class Base_entity extends Entity
             $this->$name = $data[$name];
         }
         return $this;
-        
+    }
+
+    public function first($params = null){
+        $result = $this->findAll($params);
+        if($result){
+            return $result[0];
+        }
+        return null;
     }
 
     public function new_model(){
         $this->model = 'App\\Models\\'.$this->modelobject;
         $this->newmodel = new $this->model();
+    }
+
+    public function db(){
+        return \Config\Database::connect();
+    }
+
+    public function forge(){
+        return \Config\Database::forge();
     }
 
 

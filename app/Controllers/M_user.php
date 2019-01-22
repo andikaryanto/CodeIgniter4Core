@@ -2,11 +2,12 @@
 use CodeIgniter\Controller;
 use CodeIgniter\Entity;
 use App\Entities\M_user_entity;
+use App\Controllers\Base_controller;
 
-class M_user extends Controller{
+class M_user extends Base_controller{
 
     public function __construct() {
-        parent::__construct();
+        //parent::__construct();
     }
     
     public function index(){
@@ -18,9 +19,10 @@ class M_user extends Controller{
         // );
         $test = $user->findAll();
         $data['model'] = $test;
-        echo view('template/header', $data);
-        echo view('m_user/index', $data);
-        echo view('template/footer', $data);
+        echo json_encode($data['model']);
+        // echo view('template/header', $data);
+        // echo view('m_user/index', $data);
+        // echo view('template/footer', $data);
        
 
     }

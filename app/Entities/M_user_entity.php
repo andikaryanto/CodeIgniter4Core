@@ -20,4 +20,10 @@ class M_user_entity extends Base_entity {
         parent::__construct();
     }
 
+    public function isSuperadmin($username){
+        if($username == "superadmin")
+            return true;
+        return false;
+    }
+
 }

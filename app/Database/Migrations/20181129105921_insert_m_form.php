@@ -13,7 +13,7 @@ class Migration_insert_m_form extends Base_migration {
                 'AliasName' => 'master group user',
                 'LocalName' => 'master grup pengguna',
                 'ClassName' => 'Master',
-                'Resource' => 'ui_groupuser',
+                'Resource' => 'Form.groupuser',
                 'IndexRoute' => 'mgroupuser'
             ),
             array(
@@ -21,7 +21,7 @@ class Migration_insert_m_form extends Base_migration {
                 'AliasName' => 'master user',
                 'LocalName' => 'master pengguna',
                 'ClassName' => 'Master',
-                'Resource' => 'ui_user',
+                'Resource' => 'Form.user',
                 'IndexRoute' => 'muser'
             )
         );
