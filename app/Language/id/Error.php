@@ -34,5 +34,6 @@ return [
     'acount_code_can_not_null' => "Kode Akun tidak boleh kosong",
     'acount_code_exist' => "Kode Akun sudah ada",
     'submission_can_not_null' => "No Pengajuan tidak boleh kosong",
-    'group_name_can_not_null' => "Nama Grup tidak boleh kosong"
+    'group_name_can_not_null' => "Nama Grup tidak boleh kosong",
+    'something_went_wrong_while_delete' => "Terjadi kesalahan saat mencoba menghapus data"
 ];

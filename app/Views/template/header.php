@@ -311,8 +311,8 @@
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                  <a class="dropdown-item" href="changePassword"><?= lang('Form.changepassword')?></a>
-                  <a class="dropdown-item" href="settings"><?= lang('Form.setting')?></a>
+                  <a class="dropdown-item" href="<?= base_url('changePassword');?>"><?= lang('Form.changepassword')?></a>
+                  <a class="dropdown-item" href="<?= base_url('settings');?>"><?= lang('Form.setting')?></a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="<?= base_url('login/dologout');?>"><?= lang('Form.logout')?></a>
                 </div>

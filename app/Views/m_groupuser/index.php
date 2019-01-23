@@ -130,23 +130,27 @@
               success : function(data){
                 var status = $.parseJSON(data);
                 console.log(status)
-                // if(status['isforbidden']){
-                //   window.location = "<?= base_url('Forbidden');?>";
-                // } else {
-                //   if(!status['status']){
-                //     for(var i=0 ; i< status['msg'].length; i++){
-                //       var message = status['msg'][i];
-                //       setNotification(message, 3, "bottom", "right");
-                //     }
-                //   } else {
-                //     for(var i=0 ; i< status['msg'].length; i++){
-                //       var message = status['msg'][i];
-                //       setNotification(message, 2, "bottom", "right");
-                //     }
-                //     table.row($tr).remove().draw();
-                //     e.preventDefault();
-                //   }
-                // }
+                if(status['isforbidden']){
+                  window.location = "<?= base_url('Forbidden');?>";
+                } else {
+                  if(!status['status']){
+                    for(var i=0 ; i< status['msg'].length; i++){
+                      var message = status['msg'][i];
+                      setNotification(message, 3, "bottom", "right");
+                    }
+                  } else {
+                    for(var i=0 ; i< status['msg'].length; i++){
+                      var message = status['msg'][i];
+                      setNotification(message, 2, "bottom", "right");
+                    }
+                    table.row($tr).remove().draw();
+                    e.preventDefault();
+                  }
+                }
+              },
+              error: function (xhr, ajaxOptions, thrownError) {
+                // console.log(xhr);
+                setNotification("<?= lang('Error.something_went_wrong_while_delete')?>", 3, "bottom", "right");
               }
             });
           }
@@ -157,7 +161,7 @@
     table.on( 'click', '.role', function () {
         $tr = $(this).closest('tr');
         var id = $tr.attr('id');
-        window.location = "<?= base_url('mgroupuser/editrole/');?>" + id;
+        window.location = "<?= base_url('mgroupuser/roles/');?>" + id;
     });
   }
 

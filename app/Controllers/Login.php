@@ -15,7 +15,7 @@ class Login extends Controller
     public function index()
     {
         // echo json_encode($_SESSION['userdata']);
-        if(!empty($this->session->get('userdata'))){
+        if(!empty($this->session->get(getSessionVariable_config()['userdata']))){
             return redirect()->route('home');
             //echo json_encode($this->session->get('userdata'));
         }
@@ -48,6 +48,7 @@ class Login extends Controller
                 $this->session->set(getSessionVariable_config()['userprofile'],get_object_vars($query->get_list_M_Userprofile()[0]));
                 $this->session->set(getSessionVariable_config()['languages'],get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Language()));
                 $this->session->set(getSessionVariable_config()['colors'],get_object_vars($query->get_list_M_Usersetting()[0]->get_G_Color()));
+                // echo redirect_paging('home');
                 return redirect('home');
             } else {
                 return redirect('login');

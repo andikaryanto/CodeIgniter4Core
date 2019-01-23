@@ -13,10 +13,6 @@ class M_userprofile_entity extends Base_entity {
     public $PhotoPath;
     public $PhotoName;
     public $AboutMe;
-    public $CreatedBy;
-    public $ModifiedBy;
-    public $Created;
-    public $Modified;
 
     public function __construct(){
         parent::__construct();

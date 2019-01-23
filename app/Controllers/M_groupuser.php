@@ -2,13 +2,14 @@
 use CodeIgniter\Controller;
 use CodeIgniter\Entity;
 use App\Entities\M_groupuser_entity;
+use App\Entities\M_accessrole_entity;
 use App\Controllers\Base_controller;
 
 class M_groupuser extends Base_controller{
 
-    // public function __construct() {
-    //     parent::__construct();
-    // }
+    public function __construct() {
+        parent::__construct();
+    }
     
     public function index(){
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Read'))
@@ -16,7 +17,7 @@ class M_groupuser extends Base_controller{
             $entity = new M_groupuser_entity();
             $model = $entity->findAll();
             $data = getDataPage_paging($model);
-            // echo json_encode($data);
+            // echo json_encode($_SESSION['kospinlanguages']['Locale']);
             $this->loadView('m_groupuser/index', $data);
         }
         else
@@ -53,7 +54,7 @@ class M_groupuser extends Base_controller{
 
             if($validate)
             {
-                $this->session->setFlashdata('add_warning_msg',$validate);
+                $this->session->setFlashdata(transactionMessage_config()['add'],$validate);
                 $data = getDataPage_paging($model);
                 $this->loadView('m_groupuser/add', $data);   
             }
@@ -62,7 +63,7 @@ class M_groupuser extends Base_controller{
                 $id = $model->save();
                 // echo $id;
                 $successmsg = getSuccessMessage_paging();
-                $this->session->setFlashdata('success_msg', $successmsg);
+                $this->session->setFlashdata(transactionMessage_config()['success'], $successmsg);
                 return redirect('mgroupuser/add');
             }
         } else {   
@@ -109,17 +110,69 @@ class M_groupuser extends Base_controller{
                 // echo json_encode( $this->session->getFlashdata('edit_warning_msg'));
                 $data = getDataPage_paging($model);
                 $this->loadView('m_groupuser/edit', $data); 
-                //return redirect()->back();  
             }
             else{
 
                 $id = $model->save();
                 $successmsg = getSuccessMessage_paging();
-                $this->session->setFlashdata('success_msg', $successmsg);
+                $this->session->setFlashdata(transactionMessage_config()['success'], $successmsg);
                 return redirect('mgroupuser');
             }
         } else {   
             echo view('forbidden/forbidden');
+        }
+    }
+
+    public function roles($groupid){
+        if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Write'))
+        { 
+
+            $entity = new M_groupuser_entity();
+            $model = $entity->find($groupid); 
+            $data['model'] = $model;
+            $this->loadView('m_groupuser/roles', $data); 
+
+        } else {
+            echo json_encode(delete_status("", FALSE, TRUE));
+        }
+    }
+
+    public function saverole()
+    {
+        $formid = $this->request->getPost("formid");
+        $groupid = $this->request->getPost("groupid");
+        $read = $this->request->getPost("read");
+        $write = $this->request->getPost("write");
+        $delete = $this->request->getPost("delete");
+        $print = $this->request->getPost("print");
+
+        $params = array(
+            'where' => array(
+                'M_Form_Id' => $formid,
+                'M_Groupuser_Id' => $groupid
+            )
+        );
+
+        $roleentity = new M_accessrole_entity();
+
+        $roles = $roleentity->first($params);
+        if($roles){
+            //$update_roles = $roleentity->find($roles->Id);
+            $roles->Read = $read;
+            $roles->Write = $write;
+            $roles->Delete = $delete;
+            $roles->Print = $print;
+            $roles->save();
+            echo json_encode($roles);
+        } else {
+            $roleentity->M_Form_Id = $formid;
+            $roleentity->M_Groupuser_Id = $groupid;
+            $roleentity->Read = $read;
+            $roleentity->Write = $write;
+            $roleentity->Delete = $delete;
+            $roleentity->Print = $print;
+            $roleentity->save();
+            echo json_encode($roleentity);
         }
     }
 
@@ -131,15 +184,15 @@ class M_groupuser extends Base_controller{
             $entity = new M_groupuser_entity();
             $model = $entity->find($id);
             $delete = $model->delete();
-            echo json_encode($response->getStatusCode());
+            // echo json_encode($response->getStatusCode());
             // if(isset($delete)){
             //     $deletemsg = getQueryErrorMessage($delete['code']);
             //     //$this->session->set_flashdata('warning_msg', $deletemsg);
             //     echo json_encode(delete_status($deletemsg, FALSE));
             // } else {
-            //     $deletemsg = getDeleteMessage_paging();
-            //     //$this->session->set_flashdata('delete_msg', $deletemsg);
-            //     echo json_encode(delete_status($deletemsg));
+                $deletemsg = getDeleteMessage_paging();
+                $this->session->setFlashdata('delete_msg', $deletemsg);
+                echo json_encode(delete_status($deletemsg));
             // }
         } else {
             echo json_encode(delete_status("", FALSE, TRUE));

@@ -18,6 +18,14 @@ function getSuccessMessage_paging(){
 function getDeleteMessage_paging(){
     $msg = array();
 
-    $msg = array_push($msg, lang('Form.datadeleted'));
+    $msg = array_merge($msg, array(0=>lang('Form.datadeleted')));
     return $msg;
+}
+
+function baseurl_paging($url){
+    return base_url($_SESSION[getSessionVariable_config()['languages']]['Locale']."/".$url);
+}
+
+function redirect_paging($url){
+    return $_SESSION[getSessionVariable_config()['languages']]['Locale']."/".$url;
 }

@@ -39,7 +39,7 @@ class Database extends \CodeIgniter\Database\Config
 		'DBPrefix' => '',
 		'pConnect' => false,
 		//'DBDebug'  => (ENVIRONMENT !== 'production'),
-		'DBDebug'  => true,
+		'DBDebug'  => false,
 		'cacheOn'  => false,
 		'cacheDir' => '',
 		'charset'  => 'utf8',

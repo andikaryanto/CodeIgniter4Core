@@ -23,3 +23,12 @@ function getSessionVariable_config(){
     ];
     return $data;
 }
+
+function transactionMessage_config(){
+    $data = [
+        'add' => "add_warning_msg",
+        'success' => "success_msg",
+        'edit' => "edit_warning_msg"
+    ];
+    return $data;
+}

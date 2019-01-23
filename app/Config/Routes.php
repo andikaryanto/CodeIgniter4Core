@@ -83,6 +83,23 @@ $routes->add('mgroupuser/addsave', 'M_groupuser::addsave');
 $routes->get('mgroupuser/edit/(:any)', 'M_groupuser::edit/$1');
 $routes->add('mgroupuser/editsave', 'M_groupuser::editsave');
 $routes->add('mgroupuser/delete', 'M_groupuser::delete');
+$routes->add('mgroupuser/roles/(:any)', 'M_groupuser::roles/$1');
+$routes->add('mgroupuser/saverole', 'M_groupuser::saverole');
+
+
+$routes->get('muser', 'M_user::index');
+$routes->get('muser/add', 'M_user::add');
+$routes->add('muser/addsave', 'M_user::addsave');
+$routes->get('muser/edit/(:any)', 'M_user::edit/$1');
+$routes->add('muser/editsave', 'M_user::editsave');
+$routes->add('muser/delete', 'M_user::delete');
+$routes->add('muser/activate/(:num)', 'M_user::activate/$1');
+$routes->get('changePassword', 'M_user::changePassword');
+$routes->add('saveNewPassword', 'M_user::saveNewPassword');
+$routes->get('settings', 'M_user::setting');
+$routes->add('savesettings', 'M_user::savesetting');
+$routes->add('saveprofile', 'M_user::saveprofile');
+$routes->get('profile', 'M_user::profile');
 
 $routes->get('mcompany', 'M_company::index');
 $routes->add('mcompany/addsave', 'M_company::addsave');

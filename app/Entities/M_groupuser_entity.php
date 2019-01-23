@@ -8,10 +8,6 @@ class M_groupuser_entity extends Base_entity {
     public $GroupName;
     public $Description;
     public $Deleted;
-    public $CreatedBy;
-    public $ModifiedBy;
-    public $Created;
-    public $Modified;
 
     public function __construct(){
         parent::__construct();
@@ -102,6 +98,45 @@ class M_groupuser_entity extends Base_entity {
         }
 
         return $hasrole;
+    }
+
+    public function accessRolesForm(){
+        $builder = $this->db()->table('view_m_accessroles');
+        $builder->select('*');
+        $builder->groupStart();
+        $builder->where('GroupId', $this->Id);
+        // $builder->where_not_in('FormId', array('3','4','5','6','8'));
+        $builder->whereNotIn('ClassName', 'Report');
+        $builder->groupEnd();
+        $builder->orWhere('GroupId', null);
+        $builder->where('ClassName !=', 'Report');
+        // $builder->groupStart();
+        // $builder->groupEnd();
+        $builder->orderBy('ClassName', 'ASC');
+        $builder->orderBy('Header', 'DESC');
+        $builder->orderBy('FormName', 'ASC');
+        $query = $builder->get();
+        
+        return $query->getResult();
+    }
+
+    public function accessRolesReport(){
+        $builder = $this->db()->table('view_m_accessroles');
+        $builder->select('*');
+        $builder->groupStart();
+        $builder->where('GroupId', $this->Id);
+        $builder->where('ClassName', 'Report');
+        $builder->groupEnd();
+        $builder->orWhere('GroupId', null);
+        $builder->where('ClassName', 'Report');
+        // $builder->groupStart();
+        // $builder->groupEnd();
+        $builder->orderBy('ClassName', 'ASC');
+        $builder->orderBy('Header', 'DESC');
+        $builder->orderBy('FormName', 'ASC');
+        $query = $builder->get();
+        
+        return $query->getResult();
     }
 
 }

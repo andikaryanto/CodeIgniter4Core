@@ -11,10 +11,6 @@ class M_company_entity extends Base_entity {
     public $Email;
     public $Phone;
     public $Fax;
-    public $CreatedBy;
-    public $ModifiedBy;
-    public $Created;
-    public $Modified;
 
     public function __construct(){
         parent::__construct();

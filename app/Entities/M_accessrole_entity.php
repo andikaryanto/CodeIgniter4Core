@@ -3,7 +3,7 @@
 use CodeIgniter\Entity;
 use App\Entities\Base_entity;
 
-class M_company_entity extends Base_entity {
+class M_accessrole_entity extends Base_entity {
     public $Id;
     public $M_Form_Id;
     public $M_Groupuser_Id;

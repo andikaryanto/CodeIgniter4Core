@@ -6,9 +6,9 @@ use App\Controllers\Base_controller;
 
 class M_company extends Base_controller{
 
-    // public function __construct() {
-    //     parent::__construct();
-    // }
+    public function __construct() {
+        parent::__construct();
+    }
     
     public function index(){
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_company'],'Read'))
@@ -53,7 +53,7 @@ class M_company extends Base_controller{
  
         if($validate)
         {
-            $this->session->setFlashdata('add_warning_msg',$validate);
+            $this->session->setFlashdata(transactionMessage_config()['add'],$validate);
             $data = getDataPage_paging($model);
             $this->loadView('m_company/add', $data);   
         }

@@ -49,7 +49,7 @@
                                     <tbody>
                                         <?php
                                             $i = 1;
-                                            foreach ($model->View_m_accessrole() as $value)
+                                            foreach ($model->accessRolesForm() as $value)
                                             {
                                         ?>
                                         <tr>
@@ -158,7 +158,7 @@
                                     <tbody>
                                         <?php
                                             //$i = 1;
-                                            foreach ($model->View_m_accessrole_report() as $value)
+                                            foreach ($model->accessRolesReport() as $value)
                                             {
                                         ?>
                                         <tr>

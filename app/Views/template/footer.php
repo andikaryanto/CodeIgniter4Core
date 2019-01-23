@@ -441,57 +441,52 @@
   
   </script>
   <script>
-    function init(){
+    // function init(){
       <?php 
       $session = \Config\Services::session();
 
-      if($session->getFlashdata('success_msg'))
+      if($session->getFlashdata(transactionMessage_config()['success']))
       {
-        $msg = $session->getFlashdata('success_msg');
-        for($i=0 ; $i<count($msg); $i++)
+        $msgsuc = $session->getFlashdata(transactionMessage_config()['success']);
+        for($i=0 ; $i<count($msgsuc); $i++)
         {
       ?>
-          setNotification("<?= lang($msg[$i]); ?>", 2, "bottom", "right");
+          setNotification("<?= lang($msgsuc[$i]); ?>", 2, "bottom", "right");
       <?php 
         }
       }
     ?>
-    // var ses = <?= json_encode($session->getFlashdata('edit_warning_msg'))?>;
-    // console.log(ses);
+    
     <?php 
-      if($session->getFlashdata('edit_warning_msg'))
-      {
-        $msg = $session->getFlashdata('edit_warning_msg');
-        for($i=0 ; $i<count($msg); $i++)
-        {
-      ?>
-          setNotification("<?= lang($msg[$i]); ?>", 3, "bottom", "right");
-      <?php 
-        }
-      }
-    ?>
-
-    <?php 
-    if($session->getFlashdata('add_warning_msg'))
+    if($session->getFlashdata(transactionMessage_config()['add']))
     {
-      $msg = $session->getFlashdata('add_warning_msg');
-      for($i=0 ; $i<count($msg); $i++)
+      $msgadd = $session->getFlashdata(transactionMessage_config()['add']);
+      for($i=0 ; $i<count($msgadd); $i++)
       {
     ?>
-        setNotification("<?= lang($msg[$i]); ?>", 3, "bottom", "right");
+        setNotification("<?= lang($msgadd[$i]); ?>", 3, "bottom", "right");
     <?php 
-
-        
       }
     }
 
+    if($session->getFlashdata(transactionMessage_config()['edit']))
+    {
+      $msgedit = $session->getFlashdata(transactionMessage_config()['edit']);
+      for($i=0 ; $i<count($msgedit); $i++)
+      {
+    ?>
+        setNotification("<?= lang($msgedit[$i]); ?>", 3, "bottom", "right");
+    <?php 
+      }
+    }
+    
     unset(
-          $_SESSION['success_msg'],
-          $_SESSION['edit_warning_msg'],
-          $_SESSION['add_warning_msg']
+          $_SESSION[transactionMessage_config()['success']],
+          $_SESSION[transactionMessage_config()['edit']],
+          $_SESSION[transactionMessage_config()['add']]
     );
     ?>
-  }
+  // }
   </script>
 </body>
 

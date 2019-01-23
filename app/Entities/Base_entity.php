@@ -3,6 +3,12 @@ use CodeIgniter\Entity;
 
 class Base_entity extends Entity
 {
+    //global field exist in each table
+    public $CreatedBy;
+    public $ModifiedBy;
+    public $Created;
+    public $Modified;
+
     protected $session;
     protected $db;
     protected $table='';
@@ -28,15 +34,18 @@ class Base_entity extends Entity
     
     public function __call($name, $argument){
 
-        if (substr($name, 0, 4) == 'get_' && substr($name, 4, 5) != 'list_')
+        if (substr($name, 0, 4) == 'get_' && substr($name, 4, 5) != 'list_' && substr($name, 4, 6) != 'first_' )
 		{
 			$entity = 'App\\Entities\\'.entity(substr($name, 4));
+            $field = substr($name, 4).'_Id';
+            
+            $entityobject = new $entity;
+
 			if(isset($this->$field)){
-                $entityobject = new $entity;
                 $result = $entityobject->find($this->$field);
                 return $result;
 			} else {
-				return null;
+				return $entityobject;
 			}
 			
 		} else if (substr($name, 0, 4) == 'get_' && substr($name, 4, 5) == 'list_') {
@@ -54,7 +63,27 @@ class Base_entity extends Entity
                 $result = $entityobject->findAll($params);
 				return $result;
 			}
-			return array();
+            return array();
+
+        } else if (substr($name, 0, 4) == 'get_' && substr($name, 4, 6) == 'first_') {
+
+            $entity = 'App\\Entities\\'.entity(substr($name, 10));
+            $field = $this->table.'_Id';
+
+            $entityobject = new $entity;
+			if(isset($this->Id)){
+                $params = array(
+                    'where' => array(
+                        $field => $this->Id
+                    )
+                );
+                $result = $entityobject->first($params, true);
+
+				return $result;
+            }
+            
+            return null;
+
 		} else {
 			trigger_error('Call to undefined method '.__CLASS__.'::'.$name.'()', E_USER_ERROR);
 		}
@@ -78,9 +107,10 @@ class Base_entity extends Entity
     }
 
     public function delete(){
-        if(!$this->newmodel->delete($this->Id));
-            return $this->newmodel->error();
-        return $this->newmodel->affectedRows();
+        $builder = $this->db()->table(table($this->table));
+        $string = $builder->delete($this->pk());
+            return $string;
+        return ;
     }
 
     public function findAll($params = null){
@@ -132,10 +162,14 @@ class Base_entity extends Entity
         return $this;
     }
 
-    public function first($params = null){
+    public function first($params = null, $withNewEntity = false){
         $result = $this->findAll($params);
         if($result){
             return $result[0];
+        } else {
+            if($withNewEntity) {
+                return new $this;
+            }
         }
         return null;
     }
@@ -143,6 +177,18 @@ class Base_entity extends Entity
     public function new_model(){
         $this->model = 'App\\Models\\'.$this->modelobject;
         $this->newmodel = new $this->model();
+    }
+
+    public function pk(){
+        $pk = array();
+        $fields = $this->db->getFieldData(table($this->table));
+        foreach ($fields as $field)
+        {
+            $fname = $field->name;
+			if ($field->primary_key)
+				$pk[$fname] = isset($this->$fname) ? $this->$fname : 0;
+        }
+        return $pk;
     }
 
     public function db(){

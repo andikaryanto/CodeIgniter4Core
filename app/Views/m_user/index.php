@@ -7,13 +7,13 @@
                   
                   <div class="row">
                     <div class="col">
-                      <h4 class="card-title "><?= lang('ui_data')?></h4>
-                      <p class="card-category"> <?= lang('ui_master_user')?></p>
+                      <h4 class="card-title "><?= lang('Form.data')?></h4>
+                      <p class="card-category"> <?= lang('Form.master_user')?></p>
                     </div>
                     
                     <div class="col">
                       <div class="text-right">
-                        <button type="button" rel="tooltip" class="btn btn-primary btn-round btn-fab" title="<?= lang('ui_add')?>" onclick="window.location.href='<?= base_url('muser/add');?>'">
+                        <button type="button" rel="tooltip" class="btn btn-primary btn-round btn-fab" title="<?= lang('Form.add')?>" onclick="window.location.href='<?= base_url('muser/add');?>'">
                           <i class="material-icons">add</i>
                         </button>
                       </div>
@@ -31,20 +31,20 @@
                       <div class="row">
                         <div class="col-sm-12">
                           <div class="table-responsive">
-                            <table data-page-length="<?= $_SESSION['usersettings']['RowPerpage']?>" id = "tableUser" class="table table-striped table-no-bordered table-hover dataTable dtr-inline collapsed" cellspacing="0" width="100%" style="width: 100%;" role="grid" aria-describedby="datatables_info">
+                            <table data-page-length="<?= $_SESSION[getSessionVariable_config()['usersettings']]['RowPerpage']?>" id = "tableUser" class="table table-striped table-no-bordered table-hover dataTable dtr-inline collapsed" cellspacing="0" width="100%" style="width: 100%;" role="grid" aria-describedby="datatables_info">
                               <thead class=" text-primary">
-                                  <th><?=  lang('ui_user')?></th>
-                                  <th><?=  lang('ui_group_user')?></th>
-                                  <th><?=  lang('ui_isactive')?></th>
-                                  <th class="disabled-sorting text-right"><?=  lang('ui_actions')?></th>
+                                  <th><?=  lang('Form.user')?></th>
+                                  <th><?=  lang('Form.group_user')?></th>
+                                  <th><?=  lang('Form.isactive')?></th>
+                                  <th class="disabled-sorting text-right"><?=  lang('Form.actions')?></th>
                               </thead>
                               <tfoot class=" text-primary">
                                 <tr role = "row">
                                   <!-- <th># </th> -->
-                                  <th><?=  lang('ui_user')?></th>
-                                  <th><?=  lang('ui_group_user')?></th>
-                                  <th><?=  lang('ui_isactive')?></th>
-                                  <th class="disabled-sorting text-right"><?=  lang('ui_actions')?></th>
+                                  <th><?=  lang('Form.user')?></th>
+                                  <th><?=  lang('Form.group_user')?></th>
+                                  <th><?=  lang('Form.isactive')?></th>
+                                  <th class="disabled-sorting text-right"><?=  lang('Form.actions')?></th>
                                 </tr>
                               </tfoot>
                               <tbody>
@@ -69,9 +69,9 @@
                                     ?>
                                     
                                     <td class = "td-actions text-right">
-                                      <!-- <a href="#" rel="tooltip" title="<?=  lang('ui_edit')?>" class="btn btn-link btn-success btn-just-icon edit"><i class="material-icons">edit</i></a> -->
+                                      <!-- <a href="#" rel="tooltip" title="<?=  lang('Form.edit')?>" class="btn btn-link btn-success btn-just-icon edit"><i class="material-icons">edit</i></a> -->
                                       <?php $button_class = !$value->IsActive ? "btn btn-link btn-success btn-just-icon activate" : "btn btn-link btn-danger btn-just-icon" ?>
-                                      <a href="#" rel="tooltip" title="<?= !$value->IsActive ? lang('ui_activate') : lang('ui_deactivate')?>" class="<?= $button_class?> activate"><i class="material-icons">power</i></a>
+                                      <a href="#" rel="tooltip" title="<?= !$value->IsActive ? lang('Form.activate') : lang('Form.deactivate')?>" class="<?= $button_class?> activate"><i class="material-icons">power</i></a>
                                     </td>
                                   </tr>
                               <?php
@@ -127,18 +127,7 @@
   }
 
   function init(){
-    <?php 
-      if($this->session->flashdata('success_msg'))
-      {
-        $msg = $this->session->flashdata('success_msg');
-        for($i=0 ; $i<count($msg); $i++)
-        {
-      ?>
-          setNotification("<?= lang($msg[$i]); ?>", 2, "bottom", "right");
-      <?php 
-        }
-      }
-    ?>
+   
   }
 
   function delete_user(id, name){

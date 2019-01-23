@@ -1,13 +1,26 @@
 <?php namespace App\Controllers;
 use CodeIgniter\Controller;
+use CodeIgniter\HTTP\Message;
 class Base_controller extends Controller {
     // protected $request;
     protected $helpers = ['helpers', 'form', 'paging', 'config'];
     protected $session;
+    protected $negotiator;
 
     public function __construct()
     {
         $this->session = \Config\Services::session();
+        $this->negotiator = \Config\Services::negotiator();
+        // $request = \Config\Services::request();
+        
+        // $supported = [
+        //     $_SESSION['kospinlanguages']['Locale']
+        // ];
+
+        // $lang = $this->negotiator->language($supported);
+        // $this->negotiateLanguage($supported);
+        // echo json_encode($lang);
+        // echo (string)$_SESSION['kospinlanguages']['Locale'];
     }
 
     public function loadView($page, $data = array()){

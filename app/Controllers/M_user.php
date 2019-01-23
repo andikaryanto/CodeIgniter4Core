@@ -2,55 +2,316 @@
 use CodeIgniter\Controller;
 use CodeIgniter\Entity;
 use App\Entities\M_user_entity;
+use App\Entities\M_userprofile_entity;
 use App\Controllers\Base_controller;
 
 class M_user extends Base_controller{
 
     public function __construct() {
-        //parent::__construct();
+        parent::__construct();
     }
     
     public function index(){
-        $user = new M_user_entity();
-        // $params = array(
-        //     'where' => array(
-        //         'Id' => 3
-        //     )
-        // );
-        $test = $user->findAll();
-        $data['model'] = $test;
-        echo json_encode($data['model']);
-        // echo view('template/header', $data);
-        // echo view('m_user/index', $data);
-        // echo view('template/footer', $data);
-       
+        if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Read'))
+        {
+            $entity = new M_user_entity();
 
+            $params = array(
+                'where' => array(
+                    'Id !=' => 1
+                )
+            );
+
+            $model = $entity->findAll($params);
+            $data = getDataPage_paging($model);
+            // echo json_encode($model);
+            $this->loadView('m_user/index', $data);
+        }
+        else
+        {   
+            echo view('forbidden/forbidden');
+        }
     }
 
     public function add(){
-        $user = new M_user_entity();
 
+        if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
+        {
+            $model = new M_user_entity();
+            $data = getDataPage_paging($model);
+            $this->loadView('m_user/add', $data);
+        }
+        else
+        {   
+            echo view('forbidden/forbidden');
+        }
     }
 
     public function addsave(){
-        $user = new M_user_entity();
-        $user->M_Groupuser_Id = 1;
-        $user->Username = 'trolololol';
-        $user->Password = 'test';
-        $user->save();
+        if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
+        {
+            $groupid    = $this->request->getPost('groupid');
+            $username   = $this->request->getPost('named');
+            $password   = $this->request->getPost('password');
+            
+            $model = new M_user_entity();
+            $model->M_Groupuser_Id = $groupid;
+            $model->Username = $username;
+            $model->setPassword($password);
+            $model->IsLoggedIn = 0;
+            $model->IsActive = 1;
+            $model->Language = 'indonesia';
+
+            $validate = $model->validate();
+
+            if($validate)
+            {
+                $this->session->setFlashdata(transactionMessage_config()['add'],$validate);
+                $data = getDataPage_paging($model);
+                $this->loadView('m_user/add', $data);   
+            }
+            else{
+
+                $db = $model->db();
+                $db->transBegin();
+                try{
+
+                    $id = $model->saveWitDetail();
+                    $db->transCommit();
+                    $successmsg = getSuccessMessage_paging();
+                    $this->session->setFlashdata(transactionMessage_config()['success'], $successmsg);
+                    return redirect('muser/add');
+                } catch (\Exception $e){
+                    $db->transRollback();
+                }
+            }
+        } else {   
+            echo view('forbidden/forbidden');
+        }
         
     }
 
-    public function editsave(){
-        $user = new M_user_entity();
-        $data = $user->find(2);
-        $data->Username = 'AHAUHAUH';
-        $data->save();
+    public function edit($id){
+
+        if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
+        {
+            $entity = new M_user_entity();
+            $model = $entity->find($id);
+            $data = getDataPage_paging($model);
+            $this->loadView('m_user/edit', $data);
+        }
+        else
+        {   
+            echo view('forbidden/forbidden');
+        }
     }
 
+    public function editsave(){
+        if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
+        {
+            $id = $this->request->getPost('iduser');
+            $name = $this->request->getPost('named');
+            $description = $this->request->getPost('description');
+            
+            $entity = new M_user_entity();
+            $model = $entity->find($id);
+            $oldmodel = clone $model;
+
+            $model->GroupName = $name;
+            $model->Description = $description;
+
+            
+            $validate = $model->validate($oldmodel);
+            //echo json_encode($validate);
+            if($validate)
+            {
+                $this->session->setFlashdata(transactionMessage_config()['edit'],$validate);
+                // echo json_encode( $this->session->getFlashdata(transactionMessage_config()['edit']));
+                $data = getDataPage_paging($model);
+                $this->loadView('m_user/edit', $data); 
+                //return redirect()->back();  
+            }
+            else{
+
+                $id = $model->save();
+                $successmsg = getSuccessMessage_paging();
+                $this->session->setFlashdata(transactionMessage_config()['success'], $successmsg);
+                return redirect('muser');
+            }
+        } else {   
+            echo view('forbidden/forbidden');
+        }
+    }
+
+
     public function delete(){
-        $user = new M_user_entity();
-        $data = $user->find(5);
-        $data->delete();
+        $id = $this->request->getPost("id");
+        // $id = $this->request->getGet("id");
+        if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Delete'))
+        {   
+            $entity = new M_user_entity();
+            $model = $entity->find($id);
+            $delete = $model->delete();
+        } else {
+            echo json_encode(delete_status("", FALSE, TRUE));
+        }
+    }
+
+    public function setting(){
+        $this->loadView('m_user/settings');
+    }
+
+    public function profile(){
+        
+        $entity = new M_userprofile_entity();
+        $params = array(
+            'where' => array (
+                'M_User_Id' => $_SESSION[getSessionVariable_config()['userdata']]['Id']
+            )
+        );
+        
+        $profile = $entity->first($params, true);
+        $data['model'] = $profile;
+        $this->loadView('m_user/profile', $data);
+    }
+
+    public function activate($id)
+    {
+        if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
+        {
+            $entity = new M_user_entity();
+            $muser = $entity->find($id);
+            if($muser){
+                $muser->IsActive = $muser->IsActive ? 0 : 1;
+                $muser->save();
+            }
+            return redirect('muser');
+        }
+        else
+        {   
+            $this->load->view('forbidden/forbidden');
+        }   
+    }
+
+    public function changePassword(){
+        $model = array(
+            'oldpassword' => "",
+            'newpassword' => "",
+            'confirmpassword' => ""
+        );
+        $data['model'] = $model;
+        $this->loadView('m_user/changePassword', $data);    
+    }
+
+    public function saveNewPassword(){
+        $oldpassword = $this->request->getPost('oldpassword');
+        $newpassword = $this->request->getPost('newpassword');
+        $confirmpassword = $this->request->getPost('confirmpassword');
+        $model = array(
+            'oldpassword' => $oldpassword,
+            'newpassword' => $newpassword,
+            'confirmpassword' =>  $confirmpassword
+        );
+        
+        $entity = new M_user_entity();
+        $muser = $entity->find($_SESSION[getSessionVariable_config()['userdata']]['Id']);
+        $validate = $muser->saveNewPassword($model);
+        // echo json_encode($validate);
+        if(empty($validate)){
+            $successmsg = getSuccessMessage_paging();
+            $this->session->setFlashdata(transactionMessage_config()['success'], $successmsg);
+            return redirect('changePassword');
+        } else {
+            $this->session->setFlashdata(transactionMessage_config()['edit'],$validate);
+            $data['model'] = $model;
+            $this->loadView('m_user/changePassword', $data);    
+        }
+    }
+
+    public function savesetting(){
+        $language = $this->request->getPost('languageid');
+        $radiocolor = $this->request->getPost('radiocolor');
+        $rowperpage = $this->request->getPost('rowperpage');
+        //$usersetting = $this->M_users->create_usersetting_object($_SESSION['usersettings']['Id'], $_SESSION[getSessionVariable_config()['userdata']]['id'],$language, explode("~",$radiocolor)[1],  $rowperpage);
+        $usersetting = $this->M_usersettings->get($_SESSION['usersettings']['Id']);
+        $usersetting->G_Language_Id = $language;
+        $usersetting->G_Color_Id = explode("~",$radiocolor)[1];
+        $usersetting->RowPerpage = $rowperpage;
+        $usersetting->save();
+
+        $languages = $this->G_languages->get($language);
+        $colors = $this->G_colors->get(explode("~",$radiocolor)[1]);
+        replaceSession('usersettings', get_object_vars($usersetting));
+        replaceSession('languages', get_object_vars($languages));
+        replaceSession('colors', get_object_vars($colors));
+        return redirect('settings');
+    }
+
+    public function saveprofile(){
+        $user = $this->M_users->get($_SESSION[getSessionVariable_config()['userdata']]['Id']);
+        $profile = $user->get_list_M_Userprofile()[0];
+
+
+        $completename = $this->request->getPost('completename');
+        $address = $this->request->getPost('address');
+        $phone = $this->request->getPost('phone');
+        $email = $this->request->getPost('email');
+        $aboutme = $this->request->getPost('aboutme');
+        $newphotoname="";
+        // echo json_encode($_FILES['file']['name']);
+
+        if(!empty($_FILES['file']['name'])){
+            $newphotoname = $this->upload_profile_pic($_FILES['file']);
+            unlink($profile->PhotoPath.$profile->PhotoName);
+        }
+
+        $profile->CompleteName = $completename;
+        $profile->Address = $address;
+        $profile->Phone = $phone;
+        $profile->Email = $email;
+        $profile->AboutMe = $aboutme;
+        if(!empty($_FILES['file']['name']))
+            $profile->PhotoName = $newphotoname;
+        $profile->save();
+        // echo json_encode($_FILES);
+
+        replaceSession('userprofile', get_object_vars($profile));
+        return redirect('profile');
+    }
+
+    private function upload_profile_pic($files){
+        $config = userprofile_upload_config();
+        $this->load->library('upload', $config);
+        $date = date("YmdHis");
+
+        //$newName = $date."_".str_replace(".","_",preg_replace('/\s+/', '', $files['name']));
+        $newName = $date."_". $files['name'];
+            
+        $_FILES['file']['name']= $newName;
+        $_FILES['file']['type']= $files['type'];
+        $_FILES['file']['tmp_name']= $files['tmp_name'];
+        $_FILES['file']['error']= $files['error'];
+        $_FILES['file']['size']= $files['size'];
+
+        $config['file_name'] = $newName;
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload('file'))
+        {
+                $error = array('error' => $this->upload->display_errors());
+
+        }
+        else
+        {
+                // $this->upload->data();
+                // $submissionfiles = $this->T_submissionfiles->new_object();
+                // $submissionfiles->T_Submission_Id = $submissionid;
+                // $submissionfiles->FileName = $newName;
+                // $submissionfiles->FileType = $files['type'];
+                // $submissionfiles->Path = $config['upload_path'];
+                // $submissionfiles->CreatedBy = $_SESSION[getSessionVariable_config()['userdata']]['Username'];
+                // $submissionfiles->save();
+                
+        }
+        return $newName;
     }
 }
