@@ -1,5 +1,6 @@
 <?php namespace App\Entities;
 use CodeIgniter\Entity;
+use App\Globals\ListEntity;
 
 class Base_entity extends Entity
 {
@@ -174,11 +175,6 @@ class Base_entity extends Entity
         return null;
     }
 
-    public function new_model(){
-        $this->model = 'App\\Models\\'.$this->modelobject;
-        $this->newmodel = new $this->model();
-    }
-
     public function pk(){
         $pk = array();
         $fields = $this->db->getFieldData(table($this->table));
@@ -197,6 +193,100 @@ class Base_entity extends Entity
 
     public function forge(){
         return \Config\Database::forge();
+    }
+
+    public function new_model(){
+        $this->model = 'App\\Models\\'.$this->modelobject;
+        $this->newmodel = new $this->model();
+    }
+
+    // Static Area
+    public static function toList($params = null){
+        $db = \Config\Database::connect();
+        $ent = 'App\\Entities\\'.static::$entityclass;
+        $model = 'App\\Models\\'.static::$entitymodel;
+
+        $where = (isset($params['where']) ? $params['where'] : FALSE);
+        $where_not_in = (isset($params['where_not_in']) ? $params['where_not_in'] : FALSE);
+
+        $listEnt = new ListEntity(static::$entityclass);
+
+        $data = new $model;
+        if ($where){
+			foreach($where as $key => $value){
+                $data = $data->where($key, $value);
+			}
+        }
+
+        if($where_not_in){
+            $index = 0;
+            foreach($where_not_in as $key => $value){
+               foreach($value as $valuedata){
+                    $data = $data->where($key, $valuedata);
+               }
+			}
+        }
+
+        $list = $data->findAll();
+
+        $table = str_replace('_entity', '', strtolower(static::$entityclass));
+        $fields = $db->getFieldData(table($table));
+        foreach ($list as $arrdata){
+            $entity = new $ent;
+            foreach ($fields as $field)
+            {
+                $name = $field->name;
+                $entity->$name = $arrdata[$name];
+            }
+            $listEnt->add($entity);
+        }
+        return $listEnt;
+    }
+
+    public static function listAll($params = null){
+        $list = static::toList($params);
+        return $list->getAll();
+    }
+
+    public static function one($id){
+        $db = \Config\Database::connect();
+        $ent = 'App\\Entities\\'.static::$entityclass;
+        $model = 'App\\Models\\'.static::$entitymodel;
+
+        $newmodel = new $model;
+        $newent = new $ent;
+        $data = $newmodel->find($id);
+
+        $table = str_replace('_entity', '', strtolower(static::$entityclass));
+        $fields = $db->getFieldData(table($table));
+        if($data){
+            foreach ($fields as $field)
+            {
+                $name = $field->name;
+                $newent->$name = $data[$name];
+            }
+    
+            return $newent;
+        }
+        return null;
+    }
+
+    public static function listFirst($params = null, $withNewEntity = false){
+        $list = static::toList($params);
+        if($list)
+            return $list->getFirst();
+        else {
+            if($withNewEntity){
+                $ent = 'App\\Entities\\'.static::$entityclass;
+                return new $ent;
+            }
+        }
+        return null;
+    }
+
+    public static function newObject(){
+        $ent = 'App\\Entities\\'.static::$entityclass;
+        return new $ent;
     }
 
 

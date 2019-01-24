@@ -36,5 +36,5 @@ return [
     'acount_code_exist' => "Account code exists",
     'submission_can_not_null' => "Submission cannot null",
     'group_name_can_not_null' => "Group Name Cannot null",
-    'something_went_wrong_while_delete' => "Something went wrong while trying delete this data"
+    'something_went_wrong_while_delete' => "Something went wrong while trying to delete this data"
 ];

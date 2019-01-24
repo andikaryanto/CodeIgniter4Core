@@ -12,9 +12,14 @@ class M_user_entity extends Base_entity {
     public $IsActive;
     public $Language;
 
+    protected static $entityclass  = 'M_user_entity';
+    protected static $entitymodel = 'M_users_model';
+
     public function __construct(){
         parent::__construct();
     }
+
+    
 
     public function isDataExist($name){
         $params = array(

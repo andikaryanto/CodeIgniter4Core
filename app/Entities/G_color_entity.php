@@ -11,6 +11,9 @@ class G_color_entity extends Base_entity {
     public $CssPath;
     public $CssCustomPath;
 
+    protected static $entityclass  = 'G_color_entity';
+    protected static $entitymodel = 'G_colors_model';
+
     public function __construct(){
         parent::__construct();
     }

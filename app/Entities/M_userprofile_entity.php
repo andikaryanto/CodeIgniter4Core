@@ -14,6 +14,9 @@ class M_userprofile_entity extends Base_entity {
     public $PhotoName;
     public $AboutMe;
 
+    protected static $entityclass  = 'M_userprofile_entity';
+    protected static $entitymodel = 'M_userprofiles_model';
+
     public function __construct(){
         parent::__construct();
     }

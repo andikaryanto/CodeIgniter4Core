@@ -9,6 +9,9 @@ class M_groupuser_entity extends Base_entity {
     public $Description;
     public $Deleted;
 
+    protected static $entityclass  = 'M_groupuser_entity';
+    protected static $entitymodel = 'M_groupusers_model';
+
     public function __construct(){
         parent::__construct();
     }

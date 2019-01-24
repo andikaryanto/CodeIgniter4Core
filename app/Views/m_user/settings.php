@@ -21,9 +21,9 @@
                       <div class = "row">
                           <label class="col-sm-2 col-form-label"><?= lang('Form.language')?></label>
                           <div class="col-sm-10">
-                            <select id = "language" name ="language" class="selectpicker" data-style="select-with-transition" title ="<?= $_SESSION['languages']['Name']?>" >
+                            <select id = "language" name ="language" class="selectpicker" data-style="select-with-transition" title ="<?= $_SESSION[getSessionVariable_config()['languages']]['Name']?>" >
                               <?php 	
-                              foreach ($this->G_languages->get_list() as $value)
+                              foreach (\App\Entities\G_language_entity::listAll()->getData() as $value)
                               { 
                               ?>
                                 <option value ="<?= $value->Id?>"><?= $value->Name?></option>
@@ -40,7 +40,7 @@
                         <div class="col-sm-10 checkbox-radios">
                           <?php 	
                           $i=1;
-                          foreach ($this->G_colors->get_list() as $value)
+                          foreach (\App\Entities\G_color_entity::listAll()->getData() as $value)
                           { 
                             $option = "option~".$value->Id;
                           ?>
@@ -92,25 +92,14 @@
 <script>
   $(document).ready(function() {    
     init();
-    $("#language").val("<?= $_SESSION['languages']['Name']?>");
-    $("#languageid").val("<?= $_SESSION['languages']['Id']?>");
+    $("#language").val("<?= $_SESSION[getSessionVariable_config()['languages']]['Name']?>");
+    $("#languageid").val("<?= $_SESSION[getSessionVariable_config()['languages']]['Id']?>");
     $("#rowperpage").val("<?= $_SESSION[getSessionVariable_config()['usersettings']]['RowPerpage']?>");
     console.log("<?= $_SESSION[getSessionVariable_config()['usersettings']]['G_Color_Id']?>")
   });
 
   function init(){
-    <?php 
-    if($this->session->flashdata('add_warning_msg'))
-    {
-      $msg = $this->session->flashdata('add_warning_msg');
-      for($i=0 ; $i<count($msg); $i++)
-      {
-    ?>
-        setNotification("<?= lang($msg[$i]); ?>", 3, "bottom", "right");
-    <?php 
-      }
-    }
-    ?>
+    
   }
   
   $("#language").on("change", function(e){

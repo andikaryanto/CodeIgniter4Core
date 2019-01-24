@@ -39,8 +39,8 @@ function getEnumName($enumName, $enumDetailId){
 }
 
 function replaceSession($name, $data){
-    $CI =& get_instance();
-    $CI->session->set_userdata($name, $data);
+    $session = \Config\Services::session();
+    $session->set($name, $data);
 }
 
 function delete_status($msg = NULL, $status = TRUE, $isforbidden = FALSE){

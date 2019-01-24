@@ -14,15 +14,7 @@ class M_user extends Base_controller{
     public function index(){
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Read'))
         {
-            $entity = new M_user_entity();
-
-            $params = array(
-                'where' => array(
-                    'Id !=' => 1
-                )
-            );
-
-            $model = $entity->findAll($params);
+            $model = \App\Entities\M_user_entity::toList()->whereNot('Id', 1)->getAll();
             $data = getDataPage_paging($model);
             // echo json_encode($model);
             $this->loadView('m_user/index', $data);
@@ -37,7 +29,7 @@ class M_user extends Base_controller{
 
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
         {
-            $model = new M_user_entity();
+            $model = \App\Entities\M_user_entity::newObject();
             $data = getDataPage_paging($model);
             $this->loadView('m_user/add', $data);
         }
@@ -54,7 +46,7 @@ class M_user extends Base_controller{
             $username   = $this->request->getPost('named');
             $password   = $this->request->getPost('password');
             
-            $model = new M_user_entity();
+            $model = \App\Entities\M_user_entity::newObject();
             $model->M_Groupuser_Id = $groupid;
             $model->Username = $username;
             $model->setPassword($password);
@@ -95,8 +87,7 @@ class M_user extends Base_controller{
 
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
         {
-            $entity = new M_user_entity();
-            $model = $entity->find($id);
+            $model =\App\Entities\M_user_entity::one($id);
             $data = getDataPage_paging($model);
             $this->loadView('m_user/edit', $data);
         }
@@ -163,14 +154,9 @@ class M_user extends Base_controller{
 
     public function profile(){
         
-        $entity = new M_userprofile_entity();
-        $params = array(
-            'where' => array (
-                'M_User_Id' => $_SESSION[getSessionVariable_config()['userdata']]['Id']
-            )
-        );
+        $model =\App\Entities\M_user_entity::one($_SESSION[getSessionVariable_config()['userdata']]['Id']);
         
-        $profile = $entity->first($params, true);
+        $profile = $model->get_first_M_Userprofile();
         $data['model'] = $profile;
         $this->loadView('m_user/profile', $data);
     }
@@ -179,8 +165,7 @@ class M_user extends Base_controller{
     {
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
         {
-            $entity = new M_user_entity();
-            $muser = $entity->find($id);
+            $muser = \App\Entities\M_user_entity::one($id);
             if($muser){
                 $muser->IsActive = $muser->IsActive ? 0 : 1;
                 $muser->save();
@@ -213,8 +198,8 @@ class M_user extends Base_controller{
             'confirmpassword' =>  $confirmpassword
         );
         
-        $entity = new M_user_entity();
-        $muser = $entity->find($_SESSION[getSessionVariable_config()['userdata']]['Id']);
+        // $entity = new M_user_entity();
+        $muser = \App\Entities\M_user_entity::one($_SESSION[getSessionVariable_config()['userdata']]['Id']);
         $validate = $muser->saveNewPassword($model);
         // echo json_encode($validate);
         if(empty($validate)){
@@ -233,23 +218,24 @@ class M_user extends Base_controller{
         $radiocolor = $this->request->getPost('radiocolor');
         $rowperpage = $this->request->getPost('rowperpage');
         //$usersetting = $this->M_users->create_usersetting_object($_SESSION['usersettings']['Id'], $_SESSION[getSessionVariable_config()['userdata']]['id'],$language, explode("~",$radiocolor)[1],  $rowperpage);
-        $usersetting = $this->M_usersettings->get($_SESSION['usersettings']['Id']);
+        $usersetting = \App\Entities\M_usersetting_entity::one($_SESSION[getSessionVariable_config()['usersettings']]['Id']);
         $usersetting->G_Language_Id = $language;
         $usersetting->G_Color_Id = explode("~",$radiocolor)[1];
         $usersetting->RowPerpage = $rowperpage;
+        echo json_encode($usersetting);
         $usersetting->save();
 
-        $languages = $this->G_languages->get($language);
-        $colors = $this->G_colors->get(explode("~",$radiocolor)[1]);
-        replaceSession('usersettings', get_object_vars($usersetting));
-        replaceSession('languages', get_object_vars($languages));
-        replaceSession('colors', get_object_vars($colors));
+        $languages = \App\Entities\G_language_entity::one($language);
+        $colors = \App\Entities\G_color_entity::one(explode("~",$radiocolor)[1]);
+        replaceSession(getSessionVariable_config()['usersettings'], get_object_vars($usersetting));
+        replaceSession(getSessionVariable_config()['languages'], get_object_vars($languages));
+        replaceSession(getSessionVariable_config()['colors'], get_object_vars($colors));
         return redirect('settings');
     }
 
     public function saveprofile(){
-        $user = $this->M_users->get($_SESSION[getSessionVariable_config()['userdata']]['Id']);
-        $profile = $user->get_list_M_Userprofile()[0];
+        $user = \App\Entities\M_user_entity::one($_SESSION[getSessionVariable_config()['userdata']]['Id']);
+        $profile = $user->get_first_M_Userprofile();
 
 
         $completename = $this->request->getPost('completename');
@@ -275,12 +261,12 @@ class M_user extends Base_controller{
         $profile->save();
         // echo json_encode($_FILES);
 
-        replaceSession('userprofile', get_object_vars($profile));
+        replaceSession(getSessionVariable_config()['userprofile'], get_object_vars($profile));
         return redirect('profile');
     }
 
     private function upload_profile_pic($files){
-        $config = userprofile_upload_config();
+        $config = userProfileUpload_config();
         $this->load->library('upload', $config);
         $date = date("YmdHis");
 

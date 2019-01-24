@@ -1,7 +1,6 @@
 <?php namespace App\Controllers;
 use CodeIgniter\Controller;
 use CodeIgniter\Entity;
-use App\Entities\M_groupuser_entity;
 use App\Entities\M_accessrole_entity;
 use App\Controllers\Base_controller;
 
@@ -14,10 +13,8 @@ class M_groupuser extends Base_controller{
     public function index(){
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Read'))
         {
-            $entity = new M_groupuser_entity();
-            $model = $entity->findAll();
+            $model = \App\Entities\M_groupuser_entity::listAll();
             $data = getDataPage_paging($model);
-            // echo json_encode($_SESSION['kospinlanguages']['Locale']);
             $this->loadView('m_groupuser/index', $data);
         }
         else
@@ -30,7 +27,7 @@ class M_groupuser extends Base_controller{
 
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Write'))
         {
-            $model = new M_groupuser_entity();
+            $model = \App\Entities\M_groupuser_entity::newObject();
             $data = getDataPage_paging($model);
             $this->loadView('m_groupuser/add', $data);
         }
@@ -46,7 +43,7 @@ class M_groupuser extends Base_controller{
             $name = $this->request->getPost('named');
             $description = $this->request->getPost('description');
             
-            $model = new M_groupuser_entity();
+            $model = \App\Entities\M_groupuser_entity::newObject();
             $model->GroupName = $name;
             $model->Description = $description;
 
@@ -76,8 +73,10 @@ class M_groupuser extends Base_controller{
 
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Write'))
         {
-            $entity = new M_groupuser_entity();
-            $model = $entity->find($id);
+            // $entity = new M_groupuser_entity();
+            // $model = $entity->find($id);
+            
+            $model = \App\Entities\M_groupuser_entity::one($id);
             $data = getDataPage_paging($model);
             $this->loadView('m_groupuser/edit', $data);
         }
@@ -94,8 +93,10 @@ class M_groupuser extends Base_controller{
             $name = $this->request->getPost('named');
             $description = $this->request->getPost('description');
             
-            $entity = new M_groupuser_entity();
-            $model = $entity->find($id);
+            // $entity = new M_groupuser_entity();
+            // $model = $entity->find($id);
+            
+            $model = \App\Entities\M_groupuser_entity::one($id);
             $oldmodel = clone $model;
 
             $model->GroupName = $name;
@@ -127,8 +128,10 @@ class M_groupuser extends Base_controller{
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Write'))
         { 
 
-            $entity = new M_groupuser_entity();
-            $model = $entity->find($groupid); 
+            // $entity = new M_groupuser_entity();
+            // $model = $entity->find($groupid); 
+            
+            $model = \App\Entities\M_groupuser_entity::one($groupid);
             $data['model'] = $model;
             $this->loadView('m_groupuser/roles', $data); 
 

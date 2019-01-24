@@ -12,7 +12,6 @@ class Home extends Base_controller
 
     public function index()
     {
-        
         //echo json_encode($this->session->userdata('userdata'));
         if(empty($this->session->get(getSessionVariable_config()['userdata']))){
             return redirect('login');

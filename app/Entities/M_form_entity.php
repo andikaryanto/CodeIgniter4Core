@@ -12,6 +12,9 @@ class M_form_entity extends Base_entity {
     public $Resource;
     public $IndexRoute;
 
+    protected static $entityclass  = 'M_form_entity';
+    protected static $entitymodel = 'M_forms_model';
+
     public function __construct(){
         parent::__construct();
     }

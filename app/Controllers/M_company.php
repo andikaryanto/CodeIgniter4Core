@@ -13,14 +13,9 @@ class M_company extends Base_controller{
     public function index(){
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_company'],'Read'))
         {
-            $model;
-            $company = new M_company_entity();
-            $model = $company->first();
-            if(empty($model))
-                $model = $company;
-
+            $model = \App\Entities\M_company_entity::listFirst();
+            // echo json_encode($model);
             $data = getDataPage_paging($model);
-            
             $this->loadView('m_company/add',$data);
         }
         else
@@ -31,9 +26,8 @@ class M_company extends Base_controller{
 
     public function addsave(){
         
-        $model;
-        $company = new M_company_entity();
 
+        $id = $this->request->getPost('companyid');
         $name = $this->request->getPost('named');
         $address = $this->request->getPost('address');
         $postcode = $this->request->getPost('postcode');
@@ -41,6 +35,7 @@ class M_company extends Base_controller{
         $phone = $this->request->getPost('phone');
         $fax = $this->request->getPost('fax');
 
+        $model = \App\Entities\M_company_entity::one($id);
         // echo json_encode($model);
         $model->CompanyName = setisnull($name);
         $model->Address = setisnull($address);
