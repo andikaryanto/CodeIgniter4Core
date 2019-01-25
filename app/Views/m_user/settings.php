@@ -23,7 +23,7 @@
                           <div class="col-sm-10">
                             <select id = "language" name ="language" class="selectpicker" data-style="select-with-transition" title ="<?= $_SESSION[getSessionVariable_config()['languages']]['Name']?>" >
                               <?php 	
-                              foreach (\App\Entities\G_language_entity::listAll()->getData() as $value)
+                              foreach (\App\Entities\G_language_entity::listAll() as $value)
                               { 
                               ?>
                                 <option value ="<?= $value->Id?>"><?= $value->Name?></option>
@@ -40,7 +40,7 @@
                         <div class="col-sm-10 checkbox-radios">
                           <?php 	
                           $i=1;
-                          foreach (\App\Entities\G_color_entity::listAll()->getData() as $value)
+                          foreach (\App\Entities\G_color_entity::listAll() as $value)
                           { 
                             $option = "option~".$value->Id;
                           ?>

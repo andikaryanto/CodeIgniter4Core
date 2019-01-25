@@ -15,15 +15,28 @@ class Test extends Base_controller {
 
     public function index(){
 
-        $user = \App\Entities\M_user_entity::toList()->whereNot('Id', 1);
+        $user = \App\Entities\M_user_entity::toList();
         // foreach($user as $data){
         //     echo json_encode($data->get_M_Groupuser());
         //     echo "<br>";
         // }
-
-        foreach($user->getAll() as $data){
-            echo json_encode($data);
-            echo "<br>";
+        // $user->M_Groupuser_Id = null;
+        // $user->save();
+        // $value = 'a';
+        // // echo $value; 
+        // $apend = empty($value) ? 'null' : $value;
+        // // echo $apend;
+        // $valstr =  "'data' = " . $apend;
+        // echo $valstr ;
+        // foreach($user as $data){
+            // echo json_encode($user);
+            // echo "<br>";
+        // }
+        try{
+            $group = \App\Entities\M_groupuser_entity::one(1);
+            $user->add($group);
+        } catch (\CodeIgniter\Exceptions\ConfigException $e) {
+            echo $e;
         }
     }
 }

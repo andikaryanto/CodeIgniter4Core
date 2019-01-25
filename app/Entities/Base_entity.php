@@ -96,12 +96,12 @@ class Base_entity extends Entity
         if($this->Id){
             $this->ModifiedBy = $_SESSION[getSessionVariable_config()['userdata']]['Username'];
             $this->Modified = getFormatedDate();
-            $this->newmodel->update($this->Id, $this);
+            $this->newmodel->save($this);
             $new_id = $this->Id;
         } else {      
             $this->CreatedBy = $_SESSION[getSessionVariable_config()['userdata']]['Username'];
             $this->Created = getFormatedDate();
-            $this->newmodel->insert($this);
+            $this->newmodel->save($this);
             $new_id = $this->newmodel->insertID();
         }
         return $new_id;

@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\Message;
+
 class Base_controller extends Controller {
     // protected $request;
     protected $helpers = ['helpers', 'form', 'paging', 'config'];
@@ -21,9 +22,22 @@ class Base_controller extends Controller {
         // $this->negotiateLanguage($supported);
         // echo json_encode($lang);
         // echo (string)$_SESSION['kospinlanguages']['Locale'];
+        
+    }
+
+    public function checkSession(){
+        if (!isset($_SESSION['kospinuserdata']))
+            return redirect()->route('login');
+        return null;
     }
 
     public function loadView($page, $data = array()){
+        
+        // if ( ! is_file(APPPATH.'/Views//'.$page.'.php'))
+        // {
+        //     // Whoops, we don't have a page for that!
+        //     throw new \CodeIgniter\Exceptions\PageNotFoundException($page);
+        // }
         echo view('template/header', $this->getDataHeader());
         echo view($page, $data);
         echo view('template/footer');

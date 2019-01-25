@@ -460,6 +460,7 @@ class Model
 		// If $data is using a custom class with public or protected
 		// properties representing the table elements, we need to grab
 		// them as an array.
+			// echo json_encode($data);
 		if (is_object($data) && ! $data instanceof \stdClass)
 		{
 			$data = static::classToArray($data, $this->dateFormat);
@@ -497,7 +498,8 @@ class Model
 	{
 		if (method_exists($data, 'toArray'))
 		{
-			$properties = $data->toArray(true, false);
+			$properties = $data->toArray(false, false);
+			// echo json_encode($properties);
 		}
 		else
 		{

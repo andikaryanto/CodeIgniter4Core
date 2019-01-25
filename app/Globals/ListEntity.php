@@ -21,7 +21,7 @@ class ListEntity {
                 
             } 
             else {
-                throw new \Excepton;
+                throw new \CodeIgniter\Exceptions\ConfigException("Class is Not match");
             }
         return $this;
     }

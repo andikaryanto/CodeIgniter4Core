@@ -34,7 +34,7 @@ class M_user_entity extends Base_entity {
         return false;
     }
 
-    public function validate(){
+    public function validate($oldmodel = null){
 
         $nameexist = false;
         $warning = array();

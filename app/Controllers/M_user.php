@@ -12,6 +12,16 @@ class M_user extends Base_controller{
     }
     
     public function index(){
+        if($this->checkSession())
+            return $this->checkSession();
+    
+        $supported = [
+            $_SESSION[getSessionVariable_config()['languages']]['Locale']
+        ];
+
+        $lang = $this->negotiator->language($supported);
+
+
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Read'))
         {
             $model = \App\Entities\M_user_entity::toList()->whereNot('Id', 1)->getAll();
@@ -23,9 +33,13 @@ class M_user extends Base_controller{
         {   
             echo view('forbidden/forbidden');
         }
+        // 
+        //echo json_encode($_SESSION['kospinuserdata']);
     }
 
     public function add(){
+        if($this->checkSession())
+            return $this->checkSession();
 
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
         {
@@ -40,6 +54,9 @@ class M_user extends Base_controller{
     }
 
     public function addsave(){
+        // if($this->checkSession())
+        //     return $this->checkSession();
+
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
         {
             $groupid    = $this->request->getPost('groupid');
@@ -47,8 +64,8 @@ class M_user extends Base_controller{
             $password   = $this->request->getPost('password');
             
             $model = \App\Entities\M_user_entity::newObject();
-            $model->M_Groupuser_Id = $groupid;
-            $model->Username = $username;
+            $model->M_Groupuser_Id = setIsNull($groupid);
+            $model->Username = setIsNull($username);
             $model->setPassword($password);
             $model->IsLoggedIn = 0;
             $model->IsActive = 1;
@@ -84,6 +101,8 @@ class M_user extends Base_controller{
     }
 
     public function edit($id){
+        if($this->checkSession())
+            return $this->checkSession();
 
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
         {
@@ -98,20 +117,20 @@ class M_user extends Base_controller{
     }
 
     public function editsave(){
+        if($this->checkSession())
+            return $this->checkSession();
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
         {
-            $id = $this->request->getPost('iduser');
-            $name = $this->request->getPost('named');
-            $description = $this->request->getPost('description');
+            $id = $this->request->getPost('userid');
+            $groupid = $this->request->getPost('groupid');
+            $username = $this->request->getPost('named');
             
-            $entity = new M_user_entity();
-            $model = $entity->find($id);
+            $model = \App\Entities\M_user_entity::one($id);
             $oldmodel = clone $model;
 
-            $model->GroupName = $name;
-            $model->Description = $description;
+            $model->M_Groupuser_Id = setIsNull($groupid);
+            $model->Username = setIsNull($username);
 
-            
             $validate = $model->validate($oldmodel);
             //echo json_encode($validate);
             if($validate)
@@ -136,6 +155,9 @@ class M_user extends Base_controller{
 
 
     public function delete(){
+        if($this->checkSession())
+            return $this->checkSession();
+
         $id = $this->request->getPost("id");
         // $id = $this->request->getGet("id");
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Delete'))
@@ -149,10 +171,15 @@ class M_user extends Base_controller{
     }
 
     public function setting(){
+        if($this->checkSession())
+            return $this->checkSession();
+
         $this->loadView('m_user/settings');
     }
 
     public function profile(){
+        if($this->checkSession())
+            return $this->checkSession();
         
         $model =\App\Entities\M_user_entity::one($_SESSION[getSessionVariable_config()['userdata']]['Id']);
         
@@ -163,11 +190,16 @@ class M_user extends Base_controller{
 
     public function activate($id)
     {
+        if($this->checkSession())
+            return $this->checkSession();
+
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_user'],'Write'))
         {
             $muser = \App\Entities\M_user_entity::one($id);
             if($muser){
                 $muser->IsActive = $muser->IsActive ? 0 : 1;
+                if(!$muser->IsActive)
+                    $muser->M_Groupuser_Id = null;
                 $muser->save();
             }
             return redirect('muser');
@@ -179,6 +211,9 @@ class M_user extends Base_controller{
     }
 
     public function changePassword(){
+        if($this->checkSession())
+            return $this->checkSession();
+
         $model = array(
             'oldpassword' => "",
             'newpassword' => "",
@@ -189,6 +224,9 @@ class M_user extends Base_controller{
     }
 
     public function saveNewPassword(){
+        if($this->checkSession())
+            return $this->checkSession();
+
         $oldpassword = $this->request->getPost('oldpassword');
         $newpassword = $this->request->getPost('newpassword');
         $confirmpassword = $this->request->getPost('confirmpassword');
@@ -214,6 +252,9 @@ class M_user extends Base_controller{
     }
 
     public function savesetting(){
+        if($this->checkSession())
+            return $this->checkSession();
+
         $language = $this->request->getPost('languageid');
         $radiocolor = $this->request->getPost('radiocolor');
         $rowperpage = $this->request->getPost('rowperpage');
@@ -234,6 +275,10 @@ class M_user extends Base_controller{
     }
 
     public function saveprofile(){
+        
+        if($this->checkSession())
+            return $this->checkSession();
+            
         $user = \App\Entities\M_user_entity::one($_SESSION[getSessionVariable_config()['userdata']]['Id']);
         $profile = $user->get_first_M_Userprofile();
 

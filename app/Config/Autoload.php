@@ -73,7 +73,8 @@ class Autoload extends \CodeIgniter\Config\AutoloadConfig
 		 */
 		$classmap = [
 			//'helpers' => APPPATH.'Helpers/helpers_helper.php'
-			'App\Globals\ListEntity' => APPPATH. 'Globals/ListEntity.php'
+			'App\Globals\ListEntity' => APPPATH. 'Globals/ListEntity.php',
+			'Controllers\Config\Services' => APPPATH. 'Controllers/Config/Services.php'
 		];
 
 		//--------------------------------------------------------------------

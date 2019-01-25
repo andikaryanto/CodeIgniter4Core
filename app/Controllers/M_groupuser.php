@@ -11,6 +11,9 @@ class M_groupuser extends Base_controller{
     }
     
     public function index(){
+        if($this->checkSession())
+            return $this->checkSession();
+
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Read'))
         {
             $model = \App\Entities\M_groupuser_entity::listAll();
@@ -24,6 +27,8 @@ class M_groupuser extends Base_controller{
     }
 
     public function add(){
+        if($this->checkSession())
+            return $this->checkSession();
 
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Write'))
         {
@@ -38,6 +43,10 @@ class M_groupuser extends Base_controller{
     }
 
     public function addsave(){
+        
+        if($this->checkSession())
+            return $this->checkSession();
+
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Write'))
         {
             $name = $this->request->getPost('named');
@@ -70,6 +79,8 @@ class M_groupuser extends Base_controller{
     }
 
     public function edit($id){
+        if($this->checkSession())
+            return $this->checkSession();
 
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Write'))
         {
@@ -87,6 +98,9 @@ class M_groupuser extends Base_controller{
     }
 
     public function editsave(){
+        if($this->checkSession())
+            return $this->checkSession();
+            
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Write'))
         {
             $id = $this->request->getPost('idgroupuser');
@@ -125,6 +139,9 @@ class M_groupuser extends Base_controller{
     }
 
     public function roles($groupid){
+        if($this->checkSession())
+            return $this->checkSession();
+
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Write'))
         { 
 
@@ -142,6 +159,9 @@ class M_groupuser extends Base_controller{
 
     public function saverole()
     {
+        if($this->checkSession())
+            return $this->checkSession();
+
         $formid = $this->request->getPost("formid");
         $groupid = $this->request->getPost("groupid");
         $read = $this->request->getPost("read");
@@ -180,6 +200,9 @@ class M_groupuser extends Base_controller{
     }
 
     public function delete(){
+        if($this->checkSession())
+            return $this->checkSession();
+            
         $id = $this->request->getPost("id");
         // $id = $this->request->getGet("id");
         if(isPermitted($_SESSION[getSessionVariable_config()['userdata']]['M_Groupuser_Id'],getFormName_config()['m_groupuser'],'Delete'))

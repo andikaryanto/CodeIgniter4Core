@@ -72,6 +72,7 @@
                                       <!-- <a href="#" rel="tooltip" title="<?=  lang('Form.edit')?>" class="btn btn-link btn-success btn-just-icon edit"><i class="material-icons">edit</i></a> -->
                                       <?php $button_class = !$value->IsActive ? "btn btn-link btn-success btn-just-icon activate" : "btn btn-link btn-danger btn-just-icon" ?>
                                       <a href="#" rel="tooltip" title="<?= !$value->IsActive ? lang('Form.activate') : lang('Form.deactivate')?>" class="<?= $button_class?> activate"><i class="material-icons">power</i></a>
+                                      <a href="#" rel="tooltip" title="<?=  lang('Form.delete')?>" class="btn btn-link btn-primary btn-just-icon edit"><i class="material-icons">edit</i></a>
                                     </td>
                                   </tr>
                               <?php
@@ -124,6 +125,8 @@
         var id = $tr.attr('id');
         window.location = "<?= base_url('muser/activate/');?>" + id;
      });
+
+     
   }
 
   function init(){

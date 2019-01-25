@@ -2,5 +2,5 @@
 use CodeIgniter\Debug\Exceptions;
 class CustomException extends Exceptions {
 
-    
+ 
 }

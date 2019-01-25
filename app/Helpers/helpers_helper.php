@@ -92,20 +92,21 @@ function getFormatedDate($strdate = null, $format = null){
 }
 
 function isPermitted($groupid = null, $form = null, $role = null){
+    
     $groupentity = "App\Entities\M_groupuser_entity";
     $mgroupuser = new $groupentity;
     $ispermitted = $mgroupuser->isPermitted($groupid, $form, $role);
     return $ispermitted;
 }
 
-function setisnull($data){
+function setIsNull($data){
     if(empty($data))
         return null;
     else 
         return $data;
 }
 
-function setisdecimal($data){
+function setIsDecimal($data){
     if(empty($data))
         return 0.00;
     else {
