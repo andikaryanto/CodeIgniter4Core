@@ -290,24 +290,26 @@ class M_user extends Base_controller{
         $aboutme = $this->request->getPost('aboutme');
         $newphotoname="";
         // echo json_encode($_FILES['file']['name']);
+        $imagefile = $this->request->getFiles('file');
+        echo json_encode($this->request->getFiles());
+        // if(!empty($_FILES['file']['name'])){
+        //     $newphotoname = $this->upload_profile_pic($_FILES['file']);
+        //     if($profile->PhotoName != 'user_default.png')
+        //         unlink($profile->PhotoPath.$profile->PhotoName);
+        // }
 
-        if(!empty($_FILES['file']['name'])){
-            $newphotoname = $this->upload_profile_pic($_FILES['file']);
-            unlink($profile->PhotoPath.$profile->PhotoName);
-        }
+        // $profile->CompleteName = $completename;
+        // $profile->Address = $address;
+        // $profile->Phone = $phone;
+        // $profile->Email = $email;
+        // $profile->AboutMe = $aboutme;
+        // if(!empty($_FILES['file']['name']))
+        //     $profile->PhotoName = $newphotoname;
+        // $profile->save();
+        // // echo json_encode($_FILES);
 
-        $profile->CompleteName = $completename;
-        $profile->Address = $address;
-        $profile->Phone = $phone;
-        $profile->Email = $email;
-        $profile->AboutMe = $aboutme;
-        if(!empty($_FILES['file']['name']))
-            $profile->PhotoName = $newphotoname;
-        $profile->save();
-        // echo json_encode($_FILES);
-
-        replaceSession(getSessionVariable_config()['userprofile'], get_object_vars($profile));
-        return redirect('profile');
+        // replaceSession(getSessionVariable_config()['userprofile'], get_object_vars($profile));
+        // return redirect('profile');
     }
 
     private function upload_profile_pic($files){
@@ -317,32 +319,32 @@ class M_user extends Base_controller{
 
         //$newName = $date."_".str_replace(".","_",preg_replace('/\s+/', '', $files['name']));
         $newName = $date."_". $files['name'];
-            
-        $_FILES['file']['name']= $newName;
-        $_FILES['file']['type']= $files['type'];
-        $_FILES['file']['tmp_name']= $files['tmp_name'];
-        $_FILES['file']['error']= $files['error'];
-        $_FILES['file']['size']= $files['size'];
+        
+        // $_FILES['file']['name']= $newName;
+        // $_FILES['file']['type']= $files['type'];
+        // $_FILES['file']['tmp_name']= $files['tmp_name'];
+        // $_FILES['file']['error']= $files['error'];
+        // $_FILES['file']['size']= $files['size'];
 
-        $config['file_name'] = $newName;
-        $this->upload->initialize($config);
-        if (!$this->upload->do_upload('file'))
-        {
-                $error = array('error' => $this->upload->display_errors());
+        // $config['file_name'] = $newName;
+        // $this->upload->initialize($config);
+        // if (!$this->upload->do_upload('file'))
+        // {
+        //         $error = array('error' => $this->upload->display_errors());
 
-        }
-        else
-        {
-                // $this->upload->data();
-                // $submissionfiles = $this->T_submissionfiles->new_object();
-                // $submissionfiles->T_Submission_Id = $submissionid;
-                // $submissionfiles->FileName = $newName;
-                // $submissionfiles->FileType = $files['type'];
-                // $submissionfiles->Path = $config['upload_path'];
-                // $submissionfiles->CreatedBy = $_SESSION[getSessionVariable_config()['userdata']]['Username'];
-                // $submissionfiles->save();
+        // }
+        // else
+        // {
+        //         // $this->upload->data();
+        //         // $submissionfiles = $this->T_submissionfiles->new_object();
+        //         // $submissionfiles->T_Submission_Id = $submissionid;
+        //         // $submissionfiles->FileName = $newName;
+        //         // $submissionfiles->FileType = $files['type'];
+        //         // $submissionfiles->Path = $config['upload_path'];
+        //         // $submissionfiles->CreatedBy = $_SESSION[getSessionVariable_config()['userdata']]['Username'];
+        //         // $submissionfiles->save();
                 
-        }
+        // }
         return $newName;
     }
 }

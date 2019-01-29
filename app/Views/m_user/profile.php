@@ -23,7 +23,7 @@
                                                         <div class="picture-container">
                                                         <div class="picture">
                                                             <img src="<?= base_url($_SESSION[getSessionVariable_config()['userprofile']]['PhotoPath'].$_SESSION[getSessionVariable_config()['userprofile']]['PhotoName'])?>" class="picture-src" id="wizardPicturePreview" title="">
-                                                            <input type="file" id="wizard-picture" name = "file" accept="image/x-png,image/jpeg">
+                                                            <input type="file" id="wizard-picture" name = "file[]" accept="image/x-png,image/jpeg">
                                                         </div>
                                                         <h6 class="description">Choose Picture</h6>
                                                         </div>
